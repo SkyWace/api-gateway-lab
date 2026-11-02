@@ -14,6 +14,9 @@ case "${1:?scenario}" in
   kill-orders)   log "STOP orders";    docker compose stop orders;    sleep 30; log "START orders";    docker compose start orders ;;
   errors-orders) log "orders error=0.5"; curl -s "http://localhost:9003/admin/chaos?error=0.5" >/dev/null; sleep 30; curl -s "http://localhost:9003/admin/chaos?error=0" >/dev/null; log "orders error=0" ;;
   slow-orders)   log "orders delay=7000"; curl -s "http://localhost:9003/admin/chaos?delay=7000" >/dev/null; sleep 30; curl -s "http://localhost:9003/admin/chaos?delay=0" >/dev/null; log "orders delay=0" ;;
-  reset) for p in 9001 9002 9003; do curl -s "http://localhost:$p/admin/chaos?delay=0&error=0" >/dev/null || true; done; docker compose start catalog-1 catalog-2 orders; log "reset" ;;
+  reset) for p in 9001 9002 9003; do curl -s "http://localhost:$p/admin/chaos?delay=0&error=0" >/dev/null || true; done; docker compose start catalog-1 catalog-2 orders
+         # Réinitialise aussi l'état des health checks de la gateway lancée (ex. Kong : cible passée unhealthy)
+         for gw in kong apisix traefik scg; do [ -n "$(docker ps -q --filter "label=com.docker.compose.service=$gw")" ] && docker compose --profile "$gw" restart "$gw"; done
+         log "reset" ;;
   *) echo "scénario inconnu"; exit 1 ;;
 esac
