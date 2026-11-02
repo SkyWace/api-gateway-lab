@@ -24,8 +24,8 @@
 | | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|
 | Répartition catalog-1 / catalog-2 | 500 / 500 (round-robin exact) | 500 / 500 (round-robin exact) | | |
-| kill-catalog2 : erreurs (nb, %) | 0 / 2 400 (0 %) | | | |
-| kill-catalog2 : réintégration (s) | ≈ 5 (hors rotation ≈ 35 s pour 31 s d'arrêt) | | | |
+| kill-catalog2 : erreurs (nb, %) | 0 / 2 400 (0 %) | 0 / 2 401 (0 %) | | |
+| kill-catalog2 : réintégration (s) | ≈ 5 (hors rotation ≈ 35 s pour 31 s d'arrêt) | ≈ 5 (c2 hors rotation ≈ 36 s pour ≈ 31 s d'arrêt) | | |
 | slow-orders : code / durée max | | | | |
 | errors-orders : circuit ouvert ? code client | « oui » de fait : 503 après 3 échecs… **et ne se referme jamais** (2 × 200, 3 × 500, puis 2 396 × 503) | oui : 503 rapides pendant la panne, **refermé ≈ 10 s après la fin** ; 24 × 500 + 563 × 503 sur 2 400 (24 %) | | |
 | kill-orders : code client | | | | |

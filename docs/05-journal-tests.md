@@ -49,3 +49,4 @@ Une ligne par exécution, y compris les runs ratés (ils font partie de la déma
 | 02/11 ~14:02 | E5 | apisix | `loadbalancing.js` | `results/apisix-lb.log` | 500 / 500 | |
 | 02/11 ~14:12 | E4 | apisix | `throughput.js` + `stats.sh` | `results/apisix-throughput.log` | ≈ 100 % servi, 0 erreur ; P95 1,6 ms à 3 000 req/s ; CPU 53 %, RAM 52 Mo | |
 | 02/11 14:19 | E5 | apisix | `resilience.js ENDPOINT=orders` + `chaos.sh errors-orders` | `results/apisix-errors-orders.log` | 1 813 × 200, 24 × 500, 563 × 503 | Circuit ouvert pendant la panne, refermé < 10 s après |
+| 02/11 ~14:24 | E5 | apisix | `resilience.js ENDPOINT=catalog` + `chaos.sh kill-catalog2` | `results/apisix-kill-catalog2.log` | 2 401 × 200, 0 erreur ; c1 1 565 / c2 836 | Failover transparent, identique à Kong |
