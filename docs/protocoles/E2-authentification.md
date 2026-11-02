@@ -13,7 +13,14 @@
 1. `docker compose --profile tools run --rm k6 run /scripts/auth.js -e TARGET=<gw>`
 2. Relever pour chaque cas le code obtenu et l'en-tête `WWW-Authenticate`.
 > Astuce : pour altérer une signature à la main, modifier un caractère au **milieu** — le dernier caractère base64url contient des bits de bourrage ignorés, le token peut rester valide.
-3. **Test de rotation** (optionnel, fort en soutenance) : dans la console Keycloak (http://localhost:8080, admin/admin), realm `lab` → Realm settings → Keys → désactiver `lab-fixed-rsa`. Redemander un token (signé par la clé générée par Keycloak) et rejouer `auth.js`.
+3. **Test de rotation** (optionnel, fort en soutenance) : désactiver la clé fixe du realm, puis redemander un token (signé par la clé générée par Keycloak) et rejouer `auth.js`.
+   ```bash
+   KC="docker compose exec keycloak /opt/keycloak/bin/kcadm.sh"
+   $KC config credentials --server http://localhost:8080 --realm master --user admin --password admin
+   ID=$($KC get components -r lab -q name=lab-fixed-rsa --fields id --format csv --noquotes)
+   $KC update components/$ID -r lab -s 'config.active=["false"]'
+   ```
+   Réactivation : même commande avec `["true"]`.
 4. **Expiration réelle** : passer `accessTokenLifespan` à 60 s dans `identity/realm-lab.json`, recréer Keycloak, attendre 61 s, rejouer le cas « token valide ».
 
 **Mesures** — tableau 9 cas × 4 gateways ; comportement à la rotation ; comportement à l'expiration.

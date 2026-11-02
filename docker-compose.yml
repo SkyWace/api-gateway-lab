@@ -52,7 +52,7 @@ services:
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
     volumes:
       - ./identity/realm-lab.json:/opt/keycloak/data/import/realm-lab.json:ro
-    ports: ["8080:8080"]
+    ports: ["8180:8080"]          # 8180 sur l hôte (8080 souvent déjà pris)
     healthcheck:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q UP <&3"]
       interval: 10s

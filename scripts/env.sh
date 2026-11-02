@@ -1,6 +1,6 @@
 # Ports exposés sur l'hôte pour chaque gateway (tests manuels / smoke)
 # Compatible bash 3.2 (macOS) : pas de tableau associatif.
-KEYCLOAK=${KEYCLOAK:-http://localhost:8080}
+KEYCLOAK=${KEYCLOAK:-http://localhost:8180}
 gw_port() {
   case "$1" in
     kong) echo 8001 ;; apisix) echo 8002 ;; traefik) echo 8003 ;; scg) echo 8004 ;;

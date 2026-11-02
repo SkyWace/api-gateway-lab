@@ -86,7 +86,7 @@ Règles appliquées à toutes les mesures :
 | Traefik (proxy / dashboard / métriques) | 8003 / 18083 / 18082 |
 | SCG | 8004 (actuator : `/actuator/prometheus`, `/actuator/gateway/routes`) |
 | catalog-1 / catalog-2 / orders (direct) | 9001 / 9002 / 9003 |
-| Keycloak | 8080 (admin / admin) |
+| Keycloak | 8180 (API token ; console admin via `kcadm.sh`, cf. E2) |
 | Prometheus | 9090 |
 
 ## 2.5 Comparable vs spécifique : ce que chaque solution fait nativement

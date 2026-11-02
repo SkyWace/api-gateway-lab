@@ -13,7 +13,7 @@ pass=0; fail=0
 t() { # t "<nom>" <regex code attendu> curl-args...  (un KO est une OBSERVATION à analyser, pas forcément un bug)
   local name=$1 expected=$2; shift 2
   local code; code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$@")
-  if [[ "$code" =~ ^($expected)$ ]]; then echo "OK  [$code] $name"; ((pass++)); else echo "KO  [$code≠$expected] $name"; ((fail++)); fi
+  if [[ "$code" =~ ^($expected)$ ]]; then echo "OK  [${code}] ${name}"; ((pass++)); else echo "KO  [${code} au lieu de ${expected}] ${name}"; ((fail++)); fi
 }
 
 {
