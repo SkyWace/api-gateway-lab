@@ -110,8 +110,8 @@ services:
     image: apache/apisix:3.11.0-debian
     profiles: ["apisix"]
     <<: *gw-limits
-    environment:
-      APISIX_STAND_ALONE: "true"
+    # Pas d'APISIX_STAND_ALONE : l'entrypoint de l'image réécrirait config.yaml (monté en lecture seule)
+    # alors que notre config.yaml déclare déjà le mode standalone (role data_plane + config_provider yaml).
     volumes:
       - ./gateways/apisix/config.yaml:/usr/local/apisix/conf/config.yaml:ro
       - ./gateways/apisix/apisix.yaml:/usr/local/apisix/conf/apisix.yaml
