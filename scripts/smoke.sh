@@ -32,8 +32,10 @@ echo "--- CORS"
 t "Préflight origine autorisée"             "200|204" -X OPTIONS -H 'Origin: http://localhost:5173' -H 'Access-Control-Request-Method: GET' "$BASE/api/catalog"
 echo "    En-têtes CORS origine autorisée :"
 curl -s -D - -o /dev/null -X OPTIONS -H 'Origin: http://localhost:5173' -H 'Access-Control-Request-Method: GET' "$BASE/api/catalog" | grep -i '^access-control' | sed 's/^/      /'
-echo "    En-têtes CORS origine NON autorisée (attendu : pas d'Access-Control-Allow-Origin) :"
-curl -s -D - -o /dev/null -X OPTIONS -H 'Origin: http://evil.example' -H 'Access-Control-Request-Method: GET' "$BASE/api/catalog" | grep -i '^access-control-allow-origin' | sed 's/^/      /' || echo "      (aucun) -> OK"
+echo "    Origine NON autorisée (http://evil.example) :"
+acao=$(curl -s -D - -o /dev/null -X OPTIONS -H 'Origin: http://evil.example' -H 'Access-Control-Request-Method: GET' "$BASE/api/catalog" | grep -i '^access-control-allow-origin' | tr -d '\r')
+if echo "$acao" | grep -qiE 'evil\.example|: \*'; then echo "KO  origine hostile acceptée ($acao)"; ((fail++))
+else echo "OK  origine hostile non autorisée (${acao:-aucun Access-Control-Allow-Origin})"; ((pass++)); fi
 echo "--- Requêtes malformées"
 t "Path traversal /api/catalog/../orders/1 (normalisé -> 401 attendu)" 401 --path-as-is "$BASE/api/catalog/../orders/1"
 t "JSON invalide sur POST orders"           400 -X POST -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d '{bad' "$BASE/api/orders"
