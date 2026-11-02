@@ -18,7 +18,7 @@
    - SCG : `spring_cloud_gateway_requests_seconds_count`, `http_server_requests_seconds_bucket`
 5. Après E3/E5, vérifier qu'on voit les 429 et les 5xx dans les métriques.
 
-**Résultat** — *à compléter*
+**Résultat** (colonnes Traefik et SCG : non mesurées)
 
 | | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|

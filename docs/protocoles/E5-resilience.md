@@ -19,7 +19,7 @@
 
 **Mesures** — répartition par instance ; nb et % d'erreurs ; durée de la fenêtre d'erreurs ; temps de réponse max ; code renvoyé au client ; temps de réintégration.
 
-**Résultat** — *à compléter*
+**Résultat** (colonnes Traefik et SCG : non mesurées)
 
 | | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|

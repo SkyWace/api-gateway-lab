@@ -25,7 +25,7 @@
 
 **Mesures** — tableau 9 cas × 4 gateways ; comportement à la rotation ; comportement à l'expiration.
 
-**Résultat** — *à compléter*
+**Résultat** (colonnes Traefik et SCG : non mesurées)
 
 | Cas | Attendu | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|---|

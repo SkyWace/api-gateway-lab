@@ -13,7 +13,7 @@
 2. Compléter si temps : méthode `TRACE`, URL de 10 000 caractères, `Content-Length` incohérent (`curl --data-binary` + en-tête forcé).
 3. TLS : hors périmètre mesuré ; décrire comment chaque solution le configure (cert statique, ACME natif chez Traefik, etc.).
 
-**Résultat** — *à compléter*
+**Résultat** (colonnes Traefik et SCG : non mesurées)
 
 | Cas | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|

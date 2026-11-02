@@ -18,7 +18,7 @@
 
 **Mesures** — 3 répétitions ; accepté/s, % de 429, comportement en rafale, en-têtes informatifs.
 
-**Résultat** — *à compléter*
+**Résultat** (colonnes Traefik et SCG : non mesurées)
 
 | | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|

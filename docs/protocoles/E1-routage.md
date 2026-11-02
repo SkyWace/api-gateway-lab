@@ -14,7 +14,7 @@
 
 **Mesures** — 5 cas de routage OK/KO ; nb de lignes de config ; nb de concepts.
 
-**Résultat** — *à compléter*
+**Résultat** (colonnes Traefik et SCG : non mesurées)
 
 | | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|

@@ -20,7 +20,7 @@
 
 **Mesures** — P50 / P95 / P99 (`med`, `p(95)`, `p(99)` du résumé `http_req_duration`) ; surcoût = gateway − direct ; RPS max soutenu ; CPU % et RAM max (`results/<gw>-stats-*.csv`).
 
-**Résultat** — *à compléter* (médiane de 3 runs)
+**Résultat** (colonnes Traefik et SCG : non mesurées)
 
 | | Direct | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|---|
