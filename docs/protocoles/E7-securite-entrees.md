@@ -17,12 +17,12 @@
 
 | Cas | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|
-| CORS origine autorisée | OK (Allow-Origin/Methods/Headers, Max-Age 600) | | | |
-| CORS origine refusée | renvoie l'origine configurée, pas l'origine hostile → bloqué par le navigateur | | | |
-| Path traversal | normalisé → 401 (pas de contournement) | | | |
+| CORS origine autorisée | OK | | | |
+| CORS origine refusée | aucun `Access-Control-Allow-Origin` (plus strict que Kong) | | | |
+| Path traversal | normalisé → 401 | | | |
 | En-tête 16 Ko | 400 (rejet NGINX) | | | |
 | JSON invalide (relayé au backend → 400) | 400 | | | |
-| En-têtes divulgués | `Server`/`Via: kong/3.9.1`, `X-Kong-*` (latences, request-id) → `KONG_HEADERS=off` en prod | | | |
+| En-têtes divulgués | `Server: APISIX/3.11.0` ; détail des erreurs JWT dans `WWW-Authenticate` | | | |
 | TLS / ACME | | | | |
 
 **Décision** — *à compléter*.

@@ -43,4 +43,6 @@
 
 **Observations Kong (02/11/2026, `results/kong-auth.log`)** — 9/9 conformes. Réponse `WWW-Authenticate: Bearer error="invalid_token"` conforme RFC 6750 sur les tokens invalides. NB : k6 compte les 401 attendus dans `http_req_failed` (70 %) — c'est normal, ce n'est pas un taux d'erreur.
 
+**Observations APISIX (02/11, `results/apisix-auth.log`)** — 9/9 conformes, via `openid-connect` + JWKS (aucune clé copiée dans la config). Les 401 portent un `error_description` **très détaillé** (« jwt signature verification failed », « 'exp' claim expired… », « token uses "none" alg… ») : précieux pour déboguer, mais c'est une **fuite d'information** pour un attaquant → à réduire en production.
+
 **Décision** — *à compléter*. Question du sujet : *la gateway doit-elle valider les tokens, déléguer, ou les deux ?* → s'appuyer sur la rotation et sur le saut réseau ajouté par la délégation (cf. E4).

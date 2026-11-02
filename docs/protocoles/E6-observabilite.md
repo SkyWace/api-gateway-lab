@@ -22,11 +22,11 @@
 
 | | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|
-| ID généré si absent | oui (`X-Request-ID`, plugin correlation-id) + `X-Kong-Request-Id` natif | | | |
+| ID généré si absent | oui (`X-Request-ID`, plugin request-id en global_rule) | | | |
 | ID client conservé | | | | |
 | ID visible côté backend | | | | |
 | ID dans les logs gateway | | | | |
-| Latence gateway vs upstream séparée | oui, en en-têtes de réponse (`X-Kong-Proxy-Latency`, `X-Kong-Upstream-Latency`) et en métriques | | | |
+| Latence gateway vs upstream séparée | pas en en-tête de réponse ; en métriques Prometheus (`apisix_http_latency` par type) | | | |
 | 429 / 5xx visibles en métriques | | | | |
 | Effort de mise en place | | | | |
 

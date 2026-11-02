@@ -43,3 +43,7 @@ Une ligne par exécution, y compris les runs ratés (ils font partie de la déma
 | 02/11 13:41 | E5 | kong | `resilience.js ENDPOINT=catalog` + `chaos.sh kill-catalog2` | `results/kong-kill-catalog2.log` | 2 400 × 200, 0 erreur ; c1 1 555 / c2 845 | Failover transparent, réintégration ≈ 5 s |
 | 02/11 13:46 | E5 | kong | `resilience.js ENDPOINT=orders` + `chaos.sh errors-orders` | `results/kong-errors-orders.log` | 2 × 200, 3 × 500, 2 396 × 503 | Upstream marqué unhealthy par le health check passif, jamais réintégré (pas de check actif) → indisponibilité durable |
 | 02/11 13:54 | E1/E7 | apisix | `smoke.sh apisix` | `results/apisix-smoke-20261102-135445.log` | 1 OK / 13 KO (code 000 = aucune réponse) | APISIX ne démarrait pas : `APISIX_STAND_ALONE` fait réécrire `config.yaml` par l'entrypoint alors qu'il est monté en lecture seule → variable retirée, conteneur recréé |
+| 02/11 13:59 | E1/E7 | apisix | `smoke.sh apisix` | `results/apisix-smoke-20261102-135923.log` | 14 OK / 0 KO | Après correctif de démarrage |
+| 02/11 ~14:00 | E2 | apisix | `auth.js` | `results/apisix-auth.log` | 9/9 conformes | Messages d'erreur JWT très détaillés |
+| 02/11 ~14:01 | E3 | apisix | `ratelimit.js` | `results/apisix-ratelimit.log` | greedy 10,00/s, polite 0 refus, burst 10/rafale | Quota exact |
+| 02/11 ~14:02 | E5 | apisix | `loadbalancing.js` | `results/apisix-lb.log` | 500 / 500 | |
