@@ -11,7 +11,13 @@ import { baseUrl, getToken, summaryTo } from './lib/common.js';
 const ENDPOINT = __ENV.ENDPOINT || 'catalog';
 const byStatus = new Counter('responses_by_status');
 
+// Ventilation lisible dans le résumé (statut 0 = pas de réponse / timeout côté client)
+const thresholds = {};
+for (const st of ['200', '0', '429', '500', '502', '503', '504']) thresholds[`responses_by_status{status:${st}}`] = ['count>=0'];
+for (const inst of ['catalog-1', 'catalog-2', 'orders-1', 'none']) thresholds[`responses_by_status{instance:${inst}}`] = ['count>=0'];
+
 export const options = {
+  thresholds,
   summaryTrendStats: ['avg', 'med', 'p(95)', 'p(99)', 'max'],
   scenarios: {
     steady: { executor: 'constant-arrival-rate', rate: Number(__ENV.RATE || 20), timeUnit: '1s', duration: __ENV.DURATION || '120s', preAllocatedVUs: 50, maxVUs: 200 },
