@@ -24,11 +24,11 @@
 
 | | Direct | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|---|
-| P50 catalog (ms) | 0,77 | 1,62 | | | |
-| P95 catalog (ms) | 2,10 | 3,70 | | | |
-| P99 catalog (ms) | 4,61 | 6,95 | | | |
-| Surcoût P95 catalog (ms) | — | +1,60 (P50 +0,85 ; P99 +2,34) | | | |
-| P95 orders avec JWT (ms) | — | 3,58 (P50 1,61) | | | |
+| P50 catalog (ms) | 0,77 | 1,62 | 1,51 | | |
+| P95 catalog (ms) | 2,10 | 3,70 | 2,68 | | |
+| P99 catalog (ms) | 4,61 | 6,95 | 5,38 | | |
+| Surcoût P95 catalog (ms) | — | +1,60 (P50 +0,85 ; P99 +2,34) | +0,58 (P50 +0,74 ; P99 +0,77) | | |
+| P95 orders avec JWT (ms) | — | 3,58 (P50 1,61) | 3,67 (P50 2,04) | | |
 | RPS max soutenu | — | ≥ 3 000 sans erreur (CPU ~100 %, P95 36 ms) | ≥ 3 000 sans erreur (CPU ~53 %, P95 1,6 ms) | | |
 | CPU au palier max (%) | — | 97 (limite 100) | 53 | | |
 | RAM max (Mo) | — | ~205 / 512 | ~52 / 512 | | |
@@ -45,6 +45,17 @@
 | — | orders (JWT) | 1,61 | 3,58 | 8,13 | 0 % | 0 | `kong-latency-orders.log` |
 
 Lecture : runs très reproductibles (écart P95 < 0,05 ms). Médiane catalog : P50 1,62 / P95 3,70 / P99 6,95 ms. La validation JWT ne coûte rien de mesurable en médiane (1,61 vs 1,62 ms).
+
+**APISIX — mesures retenues, limite 1 vCPU vérifiée**
+
+| Run | Route | P50 (ms) | P95 (ms) | P99 (ms) | Erreurs | dropped | Fichier |
+|---|---|---|---|---|---|---|---|
+| 1 | catalog | 1,48 | 2,68 | 5,38 | 0 % | 0 | `apisix-latency-1.log` |
+| 2 | catalog | 1,51 | 2,64 | 4,80 | 0 % | 0 | `apisix-latency-2.log` |
+| 3 | catalog | 1,54 | 2,79 | 5,64 | 0 % | 0 | `apisix-latency-3.log` |
+| — | orders (JWT/OIDC) | 2,04 | 3,67 | 8,90 | 0 % | 0 | `apisix-latency-orders.log` |
+
+Lecture : médiane catalog P50 1,51 / P95 2,68 / P99 5,38 ms, soit un surcoût P95 de **+0,58 ms** (Kong : +1,60 ms). En revanche la validation du token coûte davantage chez APISIX (P50 +0,5 ms sur orders vs catalog, contre ≈ 0 chez Kong) : le plugin `openid-connect` (bibliothèque OIDC complète, JWKS) est plus lourd que le plugin `jwt` de Kong (vérification RSA avec clé statique).
 
 *Les tableaux suivants (« mesures brutes ») sont l'historique avant correction de la limite CPU — conservés pour trace.*
 
