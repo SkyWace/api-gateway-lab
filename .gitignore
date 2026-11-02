@@ -5,3 +5,4 @@ gateways/apisix/apisix.yaml.bak
 *.log
 .idea/
 .vscode/
+gateways/traefik/dynamic.yml.bak

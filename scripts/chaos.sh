@@ -7,7 +7,7 @@
 #   reset           : remet tout à zéro
 set -euo pipefail
 cd "$(dirname "$0")/.."
-log() { echo "$(date +%H:%M:%S.%3N) $*" | tee -a results/chaos-events.log; }
+log() { echo "$(date +%H:%M:%S) $*" | tee -a results/chaos-events.log; }
 mkdir -p results
 case "${1:?scenario}" in
   kill-catalog2) log "STOP catalog-2"; docker compose stop catalog-2; sleep 30; log "START catalog-2"; docker compose start catalog-2 ;;

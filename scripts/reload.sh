@@ -7,7 +7,7 @@ cd "$(dirname "$0")/.."
 source scripts/env.sh
 GW=${1:?gateway}
 BASE=$(gw_url "$GW")
-start=$(date +%s%3N)
+start=$(now_ms)
 case "$GW" in
   kong)
     # DB-less : on pousse le fichier déclaratif complet via l'Admin API
@@ -23,7 +23,7 @@ case "$GW" in
   traefik)
     # Dossier monté (ro côté conteneur) : une modif sur l'hôte est vue par le watcher Traefik
     cp gateways/traefik/dynamic.yml /tmp/traefik-dynamic.bak
-    sed -i 's#rule: "PathPrefix(`/api/catalog`)"#rule: "PathPrefix(`/api/catalog`) || PathPrefix(`/api/v2/catalog`)"#' gateways/traefik/dynamic.yml
+    sed -i.bak 's#rule: "PathPrefix(`/api/catalog`)"#rule: "PathPrefix(`/api/catalog`) || PathPrefix(`/api/v2/catalog`)"#' gateways/traefik/dynamic.yml
     echo "Restauration : cp /tmp/traefik-dynamic.bak gateways/traefik/dynamic.yml" ;;
   scg)
     echo "SCG : routes en application.yml -> rebuild + redémarrage (docker compose up -d --build scg)."
@@ -34,7 +34,7 @@ echo "Attente de la prise en compte de /api/v2/catalog..."
 for i in $(seq 1 120); do
   hdrs=$(curl -s -D - -o /dev/null "$BASE/api/v2/catalog/1" -H 'X-Client-Id: reload' || true)
   if echo "$hdrs" | grep -qi '^x-instance:'; then   # réponse venue d'un BACKEND (en-tête X-Instance) = route active
-    echo "Route active après $(( $(date +%s%3N) - start )) ms"; exit 0; fi
+    echo "Route active après $(( $(now_ms) - start )) ms"; exit 0; fi
   sleep 0.25
 done
 echo "Route non prise en compte après 30 s"

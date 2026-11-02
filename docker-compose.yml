@@ -9,13 +9,13 @@
 # Pour les tests de perf, lancer UNE seule gateway à la fois.
 
 x-gw-limits: &gw-limits
-  cpus: "1.0"
+  cpus: 1.0
   mem_limit: 512m
 
 x-backend: &backend
   build: ./backends
   image: lab/backend:1.0
-  cpus: "0.5"
+  cpus: 0.5
   mem_limit: 256m
   restart: unless-stopped
   healthcheck:
@@ -67,7 +67,7 @@ services:
       EXPECTED_ISS: http://keycloak:8080/realms/lab
       PUBLIC_KEY_PATH: /keys/lab-public.pem
     volumes: ["./identity/keys/lab-public.pem:/keys/lab-public.pem:ro"]
-    cpus: "0.5"
+    cpus: 0.5
     mem_limit: 128m
     profiles: ["traefik"]
 
