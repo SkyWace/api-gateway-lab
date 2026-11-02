@@ -1,0 +1,67 @@
+# Configuration dynamique (routes, middlewares, services).
+# Traefik OSS : pas de validation JWT native -> forwardAuth vers auth-validator (contrôle externalisé).
+# Pas de génération native d'X-Request-ID (constat à documenter dans l'expérience observabilité).
+http:
+  routers:
+    catalog:
+      entryPoints: [web]
+      rule: "PathPrefix(`/api/catalog`)"
+      service: catalog
+      middlewares: [catalog-ratelimit, catalog-cors]
+    orders:
+      entryPoints: [web]
+      rule: "PathPrefix(`/api/orders`)"
+      service: orders
+      middlewares: [jwt-auth, orders-cb, orders-retry]
+
+  middlewares:
+    catalog-ratelimit:
+      rateLimit:            # token bucket : average/period + burst
+        average: 10
+        period: 1s
+        burst: 10
+        sourceCriterion:
+          requestHeaderName: X-Client-Id
+    catalog-cors:
+      headers:
+        accessControlAllowOriginList: ["http://localhost:5173"]
+        accessControlAllowMethods: [GET, OPTIONS]
+        accessControlAllowHeaders: [Authorization, Content-Type, X-Client-Id]
+        accessControlMaxAge: 600
+    jwt-auth:
+      forwardAuth:
+        address: http://auth-validator:4000/verify
+        authResponseHeaders: [X-User-Sub]
+    orders-cb:
+      circuitBreaker:
+        expression: "NetworkErrorRatio() > 0.30 || ResponseCodeRatio(500, 600, 0, 600) > 0.30"
+        checkPeriod: 1s
+        fallbackDuration: 10s
+        recoveryDuration: 10s
+    orders-retry:
+      retry:
+        attempts: 2
+        initialInterval: 100ms
+
+  services:
+    catalog:
+      loadBalancer:
+        serversTransport: timeouts
+        healthCheck:
+          path: /health
+          interval: 5s
+          timeout: 2s
+        servers:
+          - url: http://catalog-1:3000
+          - url: http://catalog-2:3000
+    orders:
+      loadBalancer:
+        serversTransport: timeouts
+        servers:
+          - url: http://orders:3000
+
+  serversTransports:
+    timeouts:
+      forwardingTimeouts:
+        dialTimeout: 2s
+        responseHeaderTimeout: 5s

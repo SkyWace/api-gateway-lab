@@ -1,0 +1,101 @@
+# Kong Gateway OSS 3.9 — mode DB-less (configuration déclarative).
+# Uniquement des plugins OSS : jwt, rate-limiting, cors, correlation-id, prometheus.
+# Absents en OSS (Enterprise) : openid-connect, rate-limiting-advanced, oauth2-introspection.
+# Rechargement à chaud : POST http://localhost:18001/config  (voir scripts/reload.sh)
+_format_version: "3.0"
+
+upstreams:
+  - name: catalog-upstream
+    algorithm: round-robin
+    healthchecks:
+      active:
+        type: http
+        http_path: /health
+        healthy:   { interval: 5, successes: 1 }
+        unhealthy: { interval: 5, http_failures: 2, tcp_failures: 2, timeouts: 2 }
+      passive:
+        healthy:   { successes: 5 }
+        unhealthy: { http_failures: 3, tcp_failures: 2, timeouts: 2 }
+    targets:
+      - { target: "catalog-1:3000", weight: 100 }
+      - { target: "catalog-2:3000", weight: 100 }
+
+  - name: orders-upstream
+    healthchecks:
+      passive:
+        unhealthy: { http_failures: 3, tcp_failures: 2, timeouts: 2 }
+    targets:
+      - { target: "orders:3000", weight: 100 }
+
+services:
+  - name: catalog
+    host: catalog-upstream
+    protocol: http
+    connect_timeout: 2000
+    read_timeout: 5000
+    write_timeout: 5000
+    retries: 2
+    routes:
+      - name: catalog-route
+        paths: ["/api/catalog"]
+        strip_path: false
+    plugins:
+      - name: rate-limiting
+        config:
+          second: 10
+          limit_by: header
+          header_name: X-Client-Id
+          policy: local
+          fault_tolerant: true
+      - name: cors
+        config:
+          origins: ["http://localhost:5173"]
+          methods: [GET, OPTIONS]
+          headers: [Authorization, Content-Type, X-Client-Id]
+          max_age: 600
+
+  - name: orders
+    host: orders-upstream
+    protocol: http
+    connect_timeout: 2000
+    read_timeout: 5000
+    write_timeout: 5000
+    retries: 2
+    routes:
+      - name: orders-route
+        paths: ["/api/orders"]
+        strip_path: false
+    plugins:
+      - name: jwt
+        config:
+          key_claim_name: iss          # la clé du credential = issuer Keycloak
+          claims_to_verify: [exp]
+          header_names: [authorization]
+          uri_param_names: []
+          cookie_names: []
+
+consumers:
+  - username: keycloak-lab
+    jwt_secrets:
+      - key: "http://keycloak:8080/realms/lab"
+        algorithm: RS256
+        rsa_public_key: |
+          -----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2uxzio5LMYWIaOvGhyMU
+          El/mMOxL8T4kLiqrKHIJjnk32cspzJbhKLaOyAEoWDdX7L2hy+xj4iWWvT8p5FIV
+          hZ5/F9J7Af9DKqCwZuf+6pDlBhYI6pkNltv8M9vXiOEU9WtlPPM6MbsaAuKrAIlx
+          B+Iow6vsLWWViKtRBlCgc2Pwt3CTzHna+eloCSH3frOecD/yo63ELXGMGpU2JO8E
+          ib7nx9JynuojCczlfQ32ihmvUVYtWVxIMGBFP8W74ZxRgi+Rg1sb1YaR28U2ZpcO
+          r1ZJd+fhtaJ5gMh0GgOC/MmL9VW22SVntazqsiGEpVAfgkR+K/acpneER6AArUzZ
+          swIDAQAB
+          -----END PUBLIC KEY-----
+
+plugins:   # plugins globaux
+  - name: correlation-id
+    config: { header_name: X-Request-ID, generator: uuid, echo_downstream: true }
+  - name: prometheus
+    config:
+      status_code_metrics: true
+      latency_metrics: true
+      upstream_health_metrics: true
+      bandwidth_metrics: true

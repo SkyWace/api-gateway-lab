@@ -1,0 +1,352 @@
+[
+ {
+  "id": 1,
+  "sku": "SKU-1001",
+  "name": "Bobine acier lot 1",
+  "stock": 12,
+  "unitPrice": 669.98
+ },
+ {
+  "id": 2,
+  "sku": "SKU-1002",
+  "name": "T\u00f4le lot 2",
+  "stock": 114,
+  "unitPrice": 134.19
+ },
+ {
+  "id": 3,
+  "sku": "SKU-1003",
+  "name": "Bobine acier lot 3",
+  "stock": 346,
+  "unitPrice": 669.19
+ },
+ {
+  "id": 4,
+  "sku": "SKU-1004",
+  "name": "Fil machine lot 4",
+  "stock": 44,
+  "unitPrice": 535.54
+ },
+ {
+  "id": 5,
+  "sku": "SKU-1005",
+  "name": "Bobine acier lot 5",
+  "stock": 15,
+  "unitPrice": 93.39
+ },
+ {
+  "id": 6,
+  "sku": "SKU-1006",
+  "name": "T\u00f4le lot 6",
+  "stock": 258,
+  "unitPrice": 545.8
+ },
+ {
+  "id": 7,
+  "sku": "SKU-1007",
+  "name": "Fil machine lot 7",
+  "stock": 101,
+  "unitPrice": 647.26
+ },
+ {
+  "id": 8,
+  "sku": "SKU-1008",
+  "name": "Fil machine lot 8",
+  "stock": 214,
+  "unitPrice": 206.19
+ },
+ {
+  "id": 9,
+  "sku": "SKU-1009",
+  "name": "Fil machine lot 9",
+  "stock": 142,
+  "unitPrice": 730.39
+ },
+ {
+  "id": 10,
+  "sku": "SKU-1010",
+  "name": "Bobine acier lot 10",
+  "stock": 388,
+  "unitPrice": 727.18
+ },
+ {
+  "id": 11,
+  "sku": "SKU-1011",
+  "name": "Tube lot 11",
+  "stock": 174,
+  "unitPrice": 257.31
+ },
+ {
+  "id": 12,
+  "sku": "SKU-1012",
+  "name": "T\u00f4le lot 12",
+  "stock": 490,
+  "unitPrice": 689.51
+ },
+ {
+  "id": 13,
+  "sku": "SKU-1013",
+  "name": "Bobine acier lot 13",
+  "stock": 47,
+  "unitPrice": 348.14
+ },
+ {
+  "id": 14,
+  "sku": "SKU-1014",
+  "name": "Profil\u00e9 lot 14",
+  "stock": 433,
+  "unitPrice": 316.12
+ },
+ {
+  "id": 15,
+  "sku": "SKU-1015",
+  "name": "Profil\u00e9 lot 15",
+  "stock": 413,
+  "unitPrice": 48.67
+ },
+ {
+  "id": 16,
+  "sku": "SKU-1016",
+  "name": "Tube lot 16",
+  "stock": 274,
+  "unitPrice": 121.1
+ },
+ {
+  "id": 17,
+  "sku": "SKU-1017",
+  "name": "Tube lot 17",
+  "stock": 40,
+  "unitPrice": 501.32
+ },
+ {
+  "id": 18,
+  "sku": "SKU-1018",
+  "name": "Fil machine lot 18",
+  "stock": 453,
+  "unitPrice": 776.92
+ },
+ {
+  "id": 19,
+  "sku": "SKU-1019",
+  "name": "Fil machine lot 19",
+  "stock": 98,
+  "unitPrice": 637.07
+ },
+ {
+  "id": 20,
+  "sku": "SKU-1020",
+  "name": "Bobine acier lot 20",
+  "stock": 338,
+  "unitPrice": 212.83
+ },
+ {
+  "id": 21,
+  "sku": "SKU-1021",
+  "name": "Profil\u00e9 lot 21",
+  "stock": 40,
+  "unitPrice": 771.23
+ },
+ {
+  "id": 22,
+  "sku": "SKU-1022",
+  "name": "Bobine acier lot 22",
+  "stock": 194,
+  "unitPrice": 257.4
+ },
+ {
+  "id": 23,
+  "sku": "SKU-1023",
+  "name": "Profil\u00e9 lot 23",
+  "stock": 83,
+  "unitPrice": 339.46
+ },
+ {
+  "id": 24,
+  "sku": "SKU-1024",
+  "name": "T\u00f4le lot 24",
+  "stock": 343,
+  "unitPrice": 247.61
+ },
+ {
+  "id": 25,
+  "sku": "SKU-1025",
+  "name": "Bobine acier lot 25",
+  "stock": 311,
+  "unitPrice": 575.13
+ },
+ {
+  "id": 26,
+  "sku": "SKU-1026",
+  "name": "Fil machine lot 26",
+  "stock": 373,
+  "unitPrice": 227.88
+ },
+ {
+  "id": 27,
+  "sku": "SKU-1027",
+  "name": "Tube lot 27",
+  "stock": 194,
+  "unitPrice": 250.25
+ },
+ {
+  "id": 28,
+  "sku": "SKU-1028",
+  "name": "Fil machine lot 28",
+  "stock": 112,
+  "unitPrice": 619.31
+ },
+ {
+  "id": 29,
+  "sku": "SKU-1029",
+  "name": "Bobine acier lot 29",
+  "stock": 117,
+  "unitPrice": 741.4
+ },
+ {
+  "id": 30,
+  "sku": "SKU-1030",
+  "name": "Profil\u00e9 lot 30",
+  "stock": 205,
+  "unitPrice": 248.29
+ },
+ {
+  "id": 31,
+  "sku": "SKU-1031",
+  "name": "T\u00f4le lot 31",
+  "stock": 467,
+  "unitPrice": 849.19
+ },
+ {
+  "id": 32,
+  "sku": "SKU-1032",
+  "name": "Profil\u00e9 lot 32",
+  "stock": 108,
+  "unitPrice": 593.34
+ },
+ {
+  "id": 33,
+  "sku": "SKU-1033",
+  "name": "Tube lot 33",
+  "stock": 452,
+  "unitPrice": 823.95
+ },
+ {
+  "id": 34,
+  "sku": "SKU-1034",
+  "name": "Tube lot 34",
+  "stock": 73,
+  "unitPrice": 245.74
+ },
+ {
+  "id": 35,
+  "sku": "SKU-1035",
+  "name": "T\u00f4le lot 35",
+  "stock": 381,
+  "unitPrice": 509.62
+ },
+ {
+  "id": 36,
+  "sku": "SKU-1036",
+  "name": "Profil\u00e9 lot 36",
+  "stock": 382,
+  "unitPrice": 530.28
+ },
+ {
+  "id": 37,
+  "sku": "SKU-1037",
+  "name": "Fil machine lot 37",
+  "stock": 204,
+  "unitPrice": 332.18
+ },
+ {
+  "id": 38,
+  "sku": "SKU-1038",
+  "name": "T\u00f4le lot 38",
+  "stock": 260,
+  "unitPrice": 449.23
+ },
+ {
+  "id": 39,
+  "sku": "SKU-1039",
+  "name": "Bobine acier lot 39",
+  "stock": 440,
+  "unitPrice": 107.59
+ },
+ {
+  "id": 40,
+  "sku": "SKU-1040",
+  "name": "T\u00f4le lot 40",
+  "stock": 405,
+  "unitPrice": 615.63
+ },
+ {
+  "id": 41,
+  "sku": "SKU-1041",
+  "name": "Fil machine lot 41",
+  "stock": 32,
+  "unitPrice": 352.44
+ },
+ {
+  "id": 42,
+  "sku": "SKU-1042",
+  "name": "Fil machine lot 42",
+  "stock": 239,
+  "unitPrice": 480.91
+ },
+ {
+  "id": 43,
+  "sku": "SKU-1043",
+  "name": "Fil machine lot 43",
+  "stock": 440,
+  "unitPrice": 848.76
+ },
+ {
+  "id": 44,
+  "sku": "SKU-1044",
+  "name": "Bobine acier lot 44",
+  "stock": 349,
+  "unitPrice": 797.46
+ },
+ {
+  "id": 45,
+  "sku": "SKU-1045",
+  "name": "Profil\u00e9 lot 45",
+  "stock": 393,
+  "unitPrice": 580.46
+ },
+ {
+  "id": 46,
+  "sku": "SKU-1046",
+  "name": "Bobine acier lot 46",
+  "stock": 150,
+  "unitPrice": 396.94
+ },
+ {
+  "id": 47,
+  "sku": "SKU-1047",
+  "name": "Tube lot 47",
+  "stock": 1,
+  "unitPrice": 858.9
+ },
+ {
+  "id": 48,
+  "sku": "SKU-1048",
+  "name": "Profil\u00e9 lot 48",
+  "stock": 497,
+  "unitPrice": 455.52
+ },
+ {
+  "id": 49,
+  "sku": "SKU-1049",
+  "name": "T\u00f4le lot 49",
+  "stock": 259,
+  "unitPrice": 822.24
+ },
+ {
+  "id": 50,
+  "sku": "SKU-1050",
+  "name": "Profil\u00e9 lot 50",
+  "stock": 430,
+  "unitPrice": 578.67
+ }
+]

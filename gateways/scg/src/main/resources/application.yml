@@ -1,0 +1,94 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: scg-lab
+  data:
+    redis:
+      host: redis
+      port: 6379
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # jwk-set-uri + issuer-uri : signature via JWKS ET vérification du claim iss
+          jwk-set-uri: http://keycloak:8080/realms/lab/protocol/openid-connect/certs
+          issuer-uri: http://keycloak:8080/realms/lab
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:            # "discovery" statique : 2 instances du catalogue
+            catalog:
+              - uri: http://catalog-1:3000
+              - uri: http://catalog-2:3000
+    gateway:
+      httpclient:
+        connect-timeout: 2000
+        response-timeout: 5s
+      globalcors:
+        cors-configurations:
+          '[/api/catalog/**]':
+            allowedOrigins: "http://localhost:5173"
+            allowedMethods: [GET, OPTIONS]
+            allowedHeaders: [Authorization, Content-Type, X-Client-Id]
+            maxAge: 600
+      routes:
+        - id: catalog
+          uri: lb://catalog
+          predicates:
+            - Path=/api/catalog,/api/catalog/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 10
+                redis-rate-limiter.requestedTokens: 1
+                key-resolver: "#{@clientKeyResolver}"
+            - name: Retry
+              args:
+                retries: 2
+                methods: GET
+                series: SERVER_ERROR
+        - id: orders
+          uri: http://orders:3000
+          predicates:
+            - Path=/api/orders,/api/orders/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: orders
+                fallbackUri: forward:/fallback/orders
+                statusCodes: [500, 502, 503, 504]
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      orders:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 30
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 2
+  timelimiter:
+    instances:
+      orders:
+        timeoutDuration: 5s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,gateway
+  endpoint:
+    gateway:
+      access: unrestricted
+  tracing:
+    sampling:
+      probability: 1.0
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{traceId:-},%X{spanId:-}]"

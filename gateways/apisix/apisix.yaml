@@ -1,0 +1,73 @@
+# Plugins utilisés — tous inclus dans APISIX open source (Apache 2.0) :
+# limit-count, openid-connect, api-breaker, cors, request-id, prometheus.
+upstreams:
+  - id: catalog
+    type: roundrobin
+    nodes:
+      "catalog-1:3000": 1
+      "catalog-2:3000": 1
+    retries: 2
+    timeout: { connect: 2, send: 5, read: 5 }
+    checks:
+      active:
+        type: http
+        http_path: /health
+        healthy:   { interval: 5, successes: 1 }
+        unhealthy: { interval: 5, http_failures: 2, tcp_failures: 2, timeouts: 2 }
+      passive:
+        healthy:   { http_statuses: [200, 201], successes: 5 }
+        unhealthy: { http_statuses: [500, 502, 503, 504], http_failures: 3, tcp_failures: 2, timeouts: 2 }
+
+  - id: orders
+    type: roundrobin
+    nodes:
+      "orders:3000": 1
+    retries: 2
+    timeout: { connect: 2, send: 5, read: 5 }
+
+routes:
+  - id: catalog
+    uris: ["/api/catalog", "/api/catalog/*"]
+    upstream_id: catalog
+    plugins:
+      limit-count:
+        count: 10
+        time_window: 1
+        key_type: var
+        key: http_x_client_id
+        policy: local
+        rejected_code: 429
+        show_limit_quota_header: true
+      cors:
+        allow_origins: "http://localhost:5173"
+        allow_methods: "GET,OPTIONS"
+        allow_headers: "Authorization,Content-Type,X-Client-Id"
+        max_age: 600
+
+  - id: orders
+    uris: ["/api/orders", "/api/orders/*"]
+    upstream_id: orders
+    plugins:
+      openid-connect:
+        client_id: gateway
+        client_secret: gateway-secret
+        discovery: http://keycloak:8080/realms/lab/.well-known/openid-configuration
+        bearer_only: true
+        use_jwks: true
+        realm: lab
+        set_userinfo_header: false
+      api-breaker:
+        break_response_code: 503
+        break_response_body: '{"error":"circuit_open"}'
+        unhealthy: { http_statuses: [500, 502, 503, 504], failures: 3 }
+        healthy:   { http_statuses: [200, 201], successes: 2 }
+        max_breaker_sec: 30
+
+global_rules:
+  - id: 1
+    plugins:
+      request-id:
+        header_name: X-Request-ID
+        include_in_response: true
+      prometheus: {}
+#END

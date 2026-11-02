@@ -1,0 +1,73 @@
+{
+  "realm": "lab",
+  "enabled": true,
+  "accessTokenLifespan": 3600,
+  "sslRequired": "none",
+  "components": {
+    "org.keycloak.keys.KeyProvider": [
+      {
+        "name": "lab-fixed-rsa",
+        "providerId": "rsa",
+        "config": {
+          "priority": [
+            "200"
+          ],
+          "enabled": [
+            "true"
+          ],
+          "active": [
+            "true"
+          ],
+          "algorithm": [
+            "RS256"
+          ],
+          "privateKey": [
+            "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDa7HOKjksxhYho68aHIxQSX+Yw7EvxPiQuKqsocgmOeTfZyynMluEoto7IAShYN1fsvaHL7GPiJZa9PynkUhWFnn8X0nsB/0MqoLBm5/7qkOUGFgjqmQ2W2/wz29eI4RT1a2U88zoxuxoC4qsAiXEH4ijDq+wtZZWIq1EGUKBzY/C3cJPMedr56WgJIfd+s55wP/KjrcQtcYwalTYk7wSJvufH0nKe6iMJzOV9DfaKGa9RVi1ZXEgwYEU/xbvhnFGCL5GDWxvVhpHbxTZmlw6vVkl35+G1onmAyHQaA4L8yYv1VbbZJWe1rOqyIYSlUB+CRH4r9pymd4RHoACtTNmzAgMBAAECggEAAUSnhvoFCsbBLcCz5cgUT3jwUMmFotAxjizorDNg6hRMr0/MebBIolY+G1s1yfotPSR8XRkfP9wxdGvomyUPcP/I1Wf+hJEWMk472acLG1l2z+NI7qb4wECc+y8RMcfdubcVeozWb9IHATCPYghXgTWLG+jIQz/qwTIjJheSwvF+BDC874VzLaWc6vY4O5c8dJJdvc+aF3DCg0XEW4Lv80CJ4K26/YGpgYC64hrsNDbtD4M2SDppUhsccu8gTKezcb/FgfL2o2sJMv5L8l7RsSMFaDnqqbTGC4kguw5OvDLyD+K82M9/i1pCcJiAmy3m3j63yUN3r8tL1kzvqpbvPQKBgQD+O1qIx4wF+t1u72/W3N6Q0EiDWjDONrAGyuLV+r8NOZMyeBRFapq19dun6MlkYdJned4ooI6WNxFF4ByRDE5edVf/oIseKyCALFHMn1dt/at4djG2u/LLzDnGcQA22TMOg8Wb4uu1T1S6qnSDbP5SURjeqEHIfP6y1UeMcUGmZQKBgQDccju4SeIKlmEWC67p5j+QecuV5IrZnSv/iKHpZLPSMbzXBoGpvsejlh6LeksCYwyS7NCjFRpLLUbqunNOJD9icVB8KLhhA8XW51NgFKn7wbULy2dARy3lRcGaOM86Eo9UeN/nP2WgGeS68NYM2ZKNXrmkcJswp/dbYDIKTRMSNwKBgQDsA9v7iQzT7F2vhDcWiDtSwxneX1dZyWlHFQjaz4qX03B0dQeUne/8pr8BtVlpiGrVR0zX+J4GlB7D+NdsTLlgdZ15Ieik3DKy6vIRfYekA9Aw58ElPHydd/3W3MbvJFqCyhAktNhPnNMy69V4wTGk58anxhoz7t5g1SE0H1xsBQKBgCIqPiEwqiyz47YT93berWlJxwijE/XoCwKefWF7rvbbqIW2x2+0VqJ+yJsbR/bFvRQkSa2Mvrd5++yzGt24dm5eW3fyo6i9efL1hRF2AmY3PkTmsEjg/zbyWa/6L/uzFq2j0ie3xptKiA2E99ej/LeWP7VBknu2/HoX7Yl1Koh/AoGBAK2iIjxi1g8s9uVyd7TIal+O5GvUMxeBmfjajMLNHmZFhJ7RX/NEpvdfO6ReqvZPM30N+85/hSD4mUFxh/o7a/Y6ElZSZDbWHpuPjRQkAUKjriLY3UpDpTM/NBU+FSSRtpspnwVOaL6h+pCgSdR648Aq6oFnKWPC/YqFsEDQM7dP"
+          ],
+          "certificate": [
+            "MIIC/TCCAeWgAwIBAgIUDnNMWBjpVF79RBVR7q8TC1pJfVYwDQYJKoZIhvcNAQELBQAwDjEMMAoGA1UEAwwDbGFiMB4XDTI2MTEwMjA3NTk1OFoXDTM2MTAzMDA3NTk1OFowDjEMMAoGA1UEAwwDbGFiMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2uxzio5LMYWIaOvGhyMUEl/mMOxL8T4kLiqrKHIJjnk32cspzJbhKLaOyAEoWDdX7L2hy+xj4iWWvT8p5FIVhZ5/F9J7Af9DKqCwZuf+6pDlBhYI6pkNltv8M9vXiOEU9WtlPPM6MbsaAuKrAIlxB+Iow6vsLWWViKtRBlCgc2Pwt3CTzHna+eloCSH3frOecD/yo63ELXGMGpU2JO8Eib7nx9JynuojCczlfQ32ihmvUVYtWVxIMGBFP8W74ZxRgi+Rg1sb1YaR28U2ZpcOr1ZJd+fhtaJ5gMh0GgOC/MmL9VW22SVntazqsiGEpVAfgkR+K/acpneER6AArUzZswIDAQABo1MwUTAdBgNVHQ4EFgQUvsNZEkc6q7DanSJQxuwsKi9zshUwHwYDVR0jBBgwFoAUvsNZEkc6q7DanSJQxuwsKi9zshUwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEASmEx8R2Vu1bILhEzEUsDHIhc5sjlhsPvjzv3MH56VTEAxJoOuyq7ZMv72rKXppz87lrmq2OiLggQpBmBKbk9fmHYM6dDVLMwD/arsP8Kn5mcWOcTbOnA6ChsFaRIUi60HqNIECCE4etjko99cRW7o7XN7jRlfWNiQeh4rGKCw+bzkhPC1JBLkW5fT+Dzlh6zt4a42xdQJYLyn8m8oLeUUZDbBRi3DiDyBvoPPtB7ubl27V4fpcQunK2c2NHrpGJXm+Q8x0kfVJWCnsfi2e4gk5QS794bkloHjL5gz8CFa48zPtUL700Ja+1xJ1snWT4Ef2Hp3qdIwWQepyQ0GD9xpg=="
+          ]
+        }
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "lab-client",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "lab-secret",
+      "serviceAccountsEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "protocol": "openid-connect"
+    },
+    {
+      "clientId": "gateway",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "gateway-secret",
+      "serviceAccountsEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "standardFlowEnabled": false,
+      "protocol": "openid-connect"
+    }
+  ],
+  "users": [
+    {
+      "username": "alice",
+      "enabled": true,
+      "email": "alice@lab.local",
+      "emailVerified": true,
+      "firstName": "Alice",
+      "lastName": "Lab",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "alice",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

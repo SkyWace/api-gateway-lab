@@ -1,0 +1,37 @@
+# E2 — Authentification JWT/OIDC (expérience sécurité)
+
+**Objectif** — Vérifier que `/api/orders` n'est accessible qu'avec un JWT valide émis par Keycloak, et comparer *comment* chaque gateway valide le token.
+
+**Hypothèse**
+- Les 4 rejettent les 8 cas invalides en `401` et acceptent le token valide.
+- Modes de validation différents : Kong OSS = clé publique **copiée** dans la config (pas de JWKS) ; APISIX = JWKS via discovery OIDC ; SCG = JWKS via Spring Security ; Traefik = délégation à un service externe (`forwardAuth`).
+- Conséquence attendue : rotation des clés Keycloak automatique pour APISIX/SCG, **manuelle** pour Kong OSS, dépendante du service externe pour Traefik.
+
+**Environnement** — Realm `lab`, client `lab-client` (client_credentials), clé RSA fixe `identity/keys`.
+
+**Procédure**
+1. `docker compose --profile tools run --rm k6 run /scripts/auth.js -e TARGET=<gw>`
+2. Relever pour chaque cas le code obtenu et l'en-tête `WWW-Authenticate`.
+> Astuce : pour altérer une signature à la main, modifier un caractère au **milieu** — le dernier caractère base64url contient des bits de bourrage ignorés, le token peut rester valide.
+3. **Test de rotation** (optionnel, fort en soutenance) : dans la console Keycloak (http://localhost:8080, admin/admin), realm `lab` → Realm settings → Keys → désactiver `lab-fixed-rsa`. Redemander un token (signé par la clé générée par Keycloak) et rejouer `auth.js`.
+4. **Expiration réelle** : passer `accessTokenLifespan` à 60 s dans `identity/realm-lab.json`, recréer Keycloak, attendre 61 s, rejouer le cas « token valide ».
+
+**Mesures** — tableau 9 cas × 4 gateways ; comportement à la rotation ; comportement à l'expiration.
+
+**Résultat** — *à compléter*
+
+| Cas | Attendu | Kong | APISIX | Traefik | SCG |
+|---|---|---|---|---|---|
+| catalog public sans token | 200 | | | | |
+| orders sans token | 401 | | | | |
+| orders token valide | 200 | | | | |
+| token malformé | 401 | | | | |
+| signature altérée | 401 | | | | |
+| payload modifié (sub) | 401 | | | | |
+| exp modifié | 401 | | | | |
+| alg=none | 401 | | | | |
+| schéma Basic | 401 | | | | |
+| Rotation de clé | accepté sans reconfig | | | | |
+| Token réellement expiré | 401 | | | | |
+
+**Décision** — *à compléter*. Question du sujet : *la gateway doit-elle valider les tokens, déléguer, ou les deux ?* → s'appuyer sur la rotation et sur le saut réseau ajouté par la délégation (cf. E4).

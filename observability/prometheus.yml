@@ -1,0 +1,14 @@
+# Scrape des 4 gateways ; les cibles absentes (gateway non lancée) apparaissent simplement DOWN.
+global:
+  scrape_interval: 5s
+scrape_configs:
+  - job_name: kong
+    static_configs: [{ targets: ["kong:8100"] }]
+  - job_name: apisix
+    metrics_path: /apisix/prometheus/metrics
+    static_configs: [{ targets: ["apisix:9091"] }]
+  - job_name: traefik
+    static_configs: [{ targets: ["traefik:8082"] }]
+  - job_name: scg
+    metrics_path: /actuator/prometheus
+    static_configs: [{ targets: ["scg:8080"] }]

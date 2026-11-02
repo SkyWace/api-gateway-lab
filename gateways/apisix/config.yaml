@@ -1,0 +1,17 @@
+# Apache APISIX 3.11 — mode standalone (pas d'etcd) : routes lues dans apisix.yaml,
+# fichier surveillé et rechargé automatiquement (expérience "déploiement à chaud").
+deployment:
+  role: data_plane
+  role_data_plane:
+    config_provider: yaml
+
+apisix:
+  node_listen: 9080
+  enable_admin: false
+
+nginx_config:
+  worker_processes: 1        # équité avec Kong (1 worker)
+
+plugin_attr:
+  prometheus:
+    export_addr: { ip: 0.0.0.0, port: 9091 }

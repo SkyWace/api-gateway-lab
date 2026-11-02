@@ -1,0 +1,33 @@
+# E5 — Service indisponible, répartition et résilience (expérience disponibilité)
+
+**Objectif** — Observer ce que voit le client quand un backend tombe, ralentit ou renvoie des erreurs, et vérifier l'équilibrage sur 2 instances.
+
+**Hypothèse**
+- **Répartition** : ≈ 50/50 sur `catalog-1` / `catalog-2` (round-robin) pour les 4.
+- **Perte de catalog-2** : quelques erreurs (≤ 1 %) le temps que les health checks / retries l'écartent, puis 100 % de succès sur catalog-1 ; réintégration automatique au redémarrage.
+- **orders lent (7 s)** : réponse `504` (Kong, APISIX, Traefik) ou `503` via fallback (SCG) en ≈ 5 s, pas d'attente de 7 s.
+- **orders en erreur 50 %** : circuit ouvert après quelques échecs chez APISIX (`api-breaker`), Traefik (`circuitBreaker`) et SCG (Resilience4j) → réponses rapides `503` ; Kong OSS n'a pas de circuit breaker → le client continue de recevoir les 500 du backend.
+
+**Procédure**
+1. Répartition : `... loadbalancing.js -e TARGET=<gw>` → compteurs `hits{instance:…}`.
+2. Pour chaque scénario `kill-catalog2`, `slow-orders`, `errors-orders`, `kill-orders` :
+   - terminal 1 : `docker compose --profile tools run --rm k6 run /scripts/resilience.js -e TARGET=<gw> -e ENDPOINT=<catalog|orders> 2>&1 | tee results/<gw>-<scenario>.log`
+   - terminal 2, après ~20 s : `./scripts/chaos.sh <scenario>`
+   - export : `./scripts/csv-from-log.sh results/<gw>-<scenario>.log > results/<gw>-<scenario>.csv`
+3. Tracer statut et durée dans le temps (tableur ou script) en superposant les horodatages de `results/chaos-events.log`.
+4. `./scripts/chaos.sh reset` entre deux runs.
+
+**Mesures** — répartition par instance ; nb et % d'erreurs ; durée de la fenêtre d'erreurs ; temps de réponse max ; code renvoyé au client ; temps de réintégration.
+
+**Résultat** — *à compléter*
+
+| | Kong | APISIX | Traefik | SCG |
+|---|---|---|---|---|
+| Répartition catalog-1 / catalog-2 | | | | |
+| kill-catalog2 : erreurs (nb, %) | | | | |
+| kill-catalog2 : réintégration (s) | | | | |
+| slow-orders : code / durée max | | | | |
+| errors-orders : circuit ouvert ? code client | | | | |
+| kill-orders : code client | | | | |
+
+**Décision** — *à compléter*. Question du sujet : *comment une erreur backend se répercute-t-elle sur le client ?*

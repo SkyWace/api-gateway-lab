@@ -1,0 +1,33 @@
+# Traefik Proxy v3.3 (OSS) — configuration statique
+entryPoints:
+  web:
+    address: ":80"
+  metrics:
+    address: ":8082"
+
+providers:
+  file:
+    filename: /etc/traefik/dynamic.yml
+    watch: true            # rechargement à chaud de la config dynamique
+
+api:
+  dashboard: true
+  insecure: true           # dashboard sur :8080 (lab uniquement)
+
+metrics:
+  prometheus:
+    entryPoint: metrics
+    addRoutersLabels: true
+    addServicesLabels: true
+
+log:
+  level: INFO
+
+accessLog:
+  format: json
+  fields:
+    headers:
+      defaultMode: drop
+      names:
+        X-Request-ID: keep
+        X-Client-Id: keep

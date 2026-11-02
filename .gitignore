@@ -1,0 +1,7 @@
+results/*
+!results/.gitkeep
+gateways/scg/target/
+gateways/apisix/apisix.yaml.bak
+*.log
+.idea/
+.vscode/
