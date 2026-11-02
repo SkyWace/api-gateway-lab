@@ -30,8 +30,8 @@
 | Surcoût P95 catalog (ms) | — | +1,55 (P50 +0,80) | | | |
 | P95 orders avec JWT (ms) | | | | | |
 | RPS max soutenu | — | ≥ 3 000 (0 erreur) | | | |
-| CPU au palier max (%) | | | | | |
-| RAM max (Mo) | | | | | |
+| CPU au palier max (%) | — | ~120 (pic) | | | |
+| RAM max (Mo) | — | ~206 | | | |
 
 **Mesures brutes (200 req/s, 60 s, route catalog)**
 
@@ -61,6 +61,20 @@
 | 3 000 | 103 125 | 103 140 | 100 % | 18,66 | 45,4 | 0 % |
 
 Lecture : la dégradation n'est **pas monotone** (2 250 pire que 3 000). Les itérations perdues (5 755) coïncident avec la phase où k6 **alloue de nouveaux VU** (200 pré-alloués → 508) : artefact du générateur, pas saturation de Kong. Au palier 3 000, tout est servi avec P95 = 18,7 ms et 0 erreur → **Kong tient ≥ 3 000 req/s avec 1 vCPU / 1 worker** (critère S4 validé). Correctif pour la suite : `preAllocatedVUs` porté à 600 (Kong rejoué avec ce réglage pour garder la comparaison équitable).
+
+**Débit Kong — run retenu (run 3, `preAllocatedVUs: 600`, `results/kong-throughput.log`)**
+
+| Palier visé | Attendues | Servies | % servi | P50 (ms) | P95 (ms) | P99 (ms) | Erreurs |
+|---|---|---|---|---|---|---|---|
+| 300 | 10 000 | 9 998 | 100 % | 1,07 | 24,27 | 537,6 | 0 % |
+| 750 | 25 125 | 25 070 | 99,8 % | 0,48 | 299,83 | 686,6 | 0 % |
+| 1 500 | 50 625 | 50 624 | 100 % | 0,48 | 1,34 | 4,9 | 0 % |
+| 2 250 | 76 875 | 76 877 | 100 % | 0,40 | 4,42 | 21,4 | 0 % |
+| 3 000 | 103 125 | 103 111 | 100 % | 0,60 | 25,74 | 55,9 | 0 % |
+
+Itérations perdues : 54 sur 265 734 (0,02 %). Pic conteneur : ~120 % CPU (limite à vérifier, cf. ci-dessous), ~206 Mo RAM / 512.
+
+Lecture : 0 erreur et ≈ 100 % servi à tous les paliers → **Kong soutient 3 000 req/s** (P95 25,7 ms). Les queues anormales aux paliers **bas** (750 : P95 300 ms) ne suivent pas la charge : pic transitoire côté hôte (577 VU occupés simultanément = blocage d'environ 0,9 s de toutes les requêtes en vol). À signaler comme bruit de mesure, pas comme limite de Kong.
 
 **Limites de validité** — Docker sur un poste de dev ≠ production ; k6 partage le CPU de l'hôte ; pas de TLS ; résultats à relire en *relatif* entre solutions, pas en absolu.
 
