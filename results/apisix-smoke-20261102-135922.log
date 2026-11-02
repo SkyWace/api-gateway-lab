@@ -1,0 +1,33 @@
+=== Smoke apisix (http://localhost:8002) — 2026-11-02T13:59:23+01:00
+--- Routage
+OK  [200] GET /api/catalog -> catalog
+OK  [200] GET /api/catalog/7
+OK  [404] GET /api/catalog/999 (404 backend)
+OK  [404] Route inconnue /api/unknown
+OK  [404] /admin/chaos non exposé par la gateway
+--- Authentification
+OK  [401] orders sans token
+OK  [200] orders avec token
+OK  [201] POST orders avec token
+--- CORS
+OK  [200] Préflight origine autorisée
+    En-têtes CORS origine autorisée :
+      Access-Control-Allow-Origin: http://localhost:5173
+      Access-Control-Allow-Methods: GET,OPTIONS
+      Access-Control-Max-Age: 600
+      Access-Control-Allow-Headers: Authorization,Content-Type,X-Client-Id
+    Origine NON autorisée (http://evil.example) :
+OK  origine hostile non autorisée (aucun Access-Control-Allow-Origin)
+--- Requêtes malformées
+OK  [401] Path traversal /api/catalog/../orders/1 (normalisé -> 401 attendu)
+OK  [400] JSON invalide sur POST orders
+OK  [400] Header géant (16 Ko) rejeté (4xx)
+OK  [405] Méthode non prévue (DELETE)
+--- En-têtes de réponse (fuite d'info, corrélation)
+      X-RateLimit-Limit: 10
+      X-RateLimit-Remaining: 5
+      X-RateLimit-Reset: 1
+      X-Instance: catalog-1
+      Server: APISIX/3.11.0
+      X-Request-ID: 6004134a-7f46-4877-9d69-1ee7be194c45
+=== 14 OK / 0 KO

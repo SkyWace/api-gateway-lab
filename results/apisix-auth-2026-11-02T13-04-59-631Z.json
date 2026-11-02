@@ -1,0 +1,253 @@
+{
+  "options": {
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": "",
+    "noColor": false
+  },
+  "state": {
+    "isStdOutTTY": false,
+    "isStdErrTTY": false,
+    "testRunDurationMs": 214.088667
+  },
+  "metrics": {
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "rate": 31907.340522606923,
+        "count": 6831
+      }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0.0344165,
+        "max": 0.173875,
+        "p(90)": 0.1645753,
+        "p(95)": 0.16922515,
+        "avg": 0.0635041,
+        "min": 0.018666
+      }
+    },
+    "iterations": {
+      "contains": "default",
+      "values": {
+        "count": 1,
+        "rate": 4.670961868336542
+      },
+      "type": "counter"
+    },
+    "http_req_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 28.119608000000035,
+        "p(95)": 101.96753299999995,
+        "avg": 19.8820914,
+        "min": 0.246291,
+        "med": 0.878208,
+        "max": 175.815458
+      }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 1.480958,
+        "p(90)": 0.8481464000000002,
+        "p(95)": 1.1645521999999997,
+        "avg": 0.2283252,
+        "min": 0.00125,
+        "med": 0.0030625
+      }
+    },
+    "http_req_failed": {
+      "values": {
+        "rate": 0.7,
+        "passes": 7,
+        "fails": 3
+      },
+      "type": "rate",
+      "contains": "default"
+    },
+    "checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 9,
+        "fails": 0
+      }
+    },
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 27.598084,
+        "min": 27.598084,
+        "med": 27.598084,
+        "max": 27.598084,
+        "p(90)": 27.598084,
+        "p(95)": 27.598084
+      }
+    },
+    "http_reqs": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 10,
+        "rate": 46.70961868336543
+      }
+    },
+    "http_req_sending": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.029170799999999997,
+        "min": 0.003959,
+        "med": 0.0100205,
+        "max": 0.136958,
+        "p(90)": 0.05817110000000002,
+        "p(95)": 0.09756454999999996
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0
+      }
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 6734,
+        "rate": 31454.25722137828
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 0,
+        "med": 0,
+        "max": 0.405959,
+        "p(90)": 0.2972831,
+        "p(95)": 0.35162105,
+        "avg": 0.0691167
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 11.708958,
+        "max": 175.815458,
+        "p(90)": 142.99415800000003,
+        "p(95)": 159.404808,
+        "avg": 64.80213866666666,
+        "min": 6.882
+      }
+    },
+    "http_req_waiting": {
+      "contains": "time",
+      "values": {
+        "p(90)": 27.997249400000033,
+        "p(95)": 101.75093719999994,
+        "avg": 19.7894165,
+        "min": 0.219625,
+        "med": 0.8262085,
+        "max": 175.504625
+      },
+      "type": "trend"
+    }
+  },
+  "setup_data": {
+    "token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJnLXhqRGlfeGlDNTBfa2pmMkFBejlZWVA4d3dTVF93Ty1IbXA2MDZyREZjIn0.eyJleHAiOjE3OTM2MjgyOTksImlhdCI6MTc5MzYyNDY5OSwianRpIjoiMzIwMmFlYTQtNGMyZC00ODZlLThiOTMtMjg4ZjJlMjExYTYwIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAvcmVhbG1zL2xhYiIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJmMzZlNTYxNy1hNjJjLTRmZjktYmYyZS1mOTViYjM0N2E3NDUiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJsYWItY2xpZW50IiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtbGFiIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImNsaWVudEhvc3QiOiIxNzIuMzAuMC43IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LWxhYi1jbGllbnQiLCJjbGllbnRBZGRyZXNzIjoiMTcyLjMwLjAuNyIsImNsaWVudF9pZCI6ImxhYi1jbGllbnQifQ.lr6AoWyJkSp1W7SzQJ6Z582lJhpix2zunxvioOjrhTEw8X71Zb8wPfFsmZ2rXdcl9pa900zDnjXZUPgxpICm7aVD5aFd6Dv9nahX4Ea5GcSaRxQHXZQ52DkefRsTFsFzGcs5Ytrf2togEDrtkWp5R7RZgRcYUxRlYqOyGlb7HmqP3NbEn3YEAq3RmqB2ze2nfBHrNEheg1wzpSeDa-6EMvQEZc8TwSMq_u3ohHbxwrp6v2-0M4-Kahk7TTJxKgm3RXYdc3Bk0RfzcqdQJunPjaKzQPbMs2n1JbwYtE5l5MF0n0yvMTzHn-JRwMefQaHzYmSixbKhA0BQW4bO0MSCNg"
+  },
+  "root_group": {
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [],
+    "checks": [
+        {
+          "fails": 0,
+          "name": "public catalog sans token -> 200",
+          "path": "::public catalog sans token -> 200",
+          "id": "7c276249a40008f8badec0b05269485c",
+          "passes": 1
+        },
+        {
+          "name": "orders sans token -> 401",
+          "path": "::orders sans token -> 401",
+          "id": "1609742cfa479b0241bd00db377b8e08",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "name": "orders token valide -> 200",
+          "path": "::orders token valide -> 200",
+          "id": "7b8d549fb9feddfe8525e492efdf2149",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "path": "::orders token malformé -> 401",
+          "id": "b6563ce23c59daa103de3eca2940540a",
+          "passes": 1,
+          "fails": 0,
+          "name": "orders token malformé -> 401"
+        },
+        {
+          "passes": 1,
+          "fails": 0,
+          "name": "orders signature altérée -> 401",
+          "path": "::orders signature altérée -> 401",
+          "id": "f7d1e3070e66b576b4cf52b8a5bc9ac3"
+        },
+        {
+          "name": "orders payload modifié (sub) -> 401",
+          "path": "::orders payload modifié (sub) -> 401",
+          "id": "f891183bce13eb3cef2e987709fa01d9",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "name": "orders exp modifié (signature cassée) -> 401",
+          "path": "::orders exp modifié (signature cassée) -> 401",
+          "id": "a75c8c5ebfe0eac0959f297718e2212b",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "name": "orders alg=none -> 401",
+          "path": "::orders alg=none -> 401",
+          "id": "efbc3473c29c5e42397eee9e2be5bd63",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "name": "orders schéma Basic -> 401",
+          "path": "::orders schéma Basic -> 401",
+          "id": "6b2cd9205c8c4d8cb14557f22cf8f09d",
+          "passes": 1,
+          "fails": 0
+        }
+      ],
+    "name": "",
+    "path": ""
+  }
+}

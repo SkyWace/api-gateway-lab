@@ -1,0 +1,23 @@
+=== Smoke apisix (http://localhost:8002) — 2026-11-02T13:54:47+01:00
+--- Routage
+KO  [000 au lieu de 200] GET /api/catalog -> catalog
+KO  [000 au lieu de 200] GET /api/catalog/7
+KO  [000 au lieu de 404] GET /api/catalog/999 (404 backend)
+KO  [000 au lieu de 404] Route inconnue /api/unknown
+KO  [000 au lieu de 404] /admin/chaos non exposé par la gateway
+--- Authentification
+KO  [000 au lieu de 401] orders sans token
+KO  [000 au lieu de 200] orders avec token
+KO  [000 au lieu de 201] POST orders avec token
+--- CORS
+KO  [000 au lieu de 200|204] Préflight origine autorisée
+    En-têtes CORS origine autorisée :
+    Origine NON autorisée (http://evil.example) :
+OK  origine hostile non autorisée (aucun Access-Control-Allow-Origin)
+--- Requêtes malformées
+KO  [000 au lieu de 401] Path traversal /api/catalog/../orders/1 (normalisé -> 401 attendu)
+KO  [000 au lieu de 400] JSON invalide sur POST orders
+KO  [000 au lieu de 4[0-9][0-9]] Header géant (16 Ko) rejeté (4xx)
+KO  [000 au lieu de 405] Méthode non prévue (DELETE)
+--- En-têtes de réponse (fuite d'info, corrélation)
+=== 1 OK / 13 KO

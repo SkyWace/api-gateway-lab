@@ -1,0 +1,50 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/auth.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
+              * default: 1 iterations shared among 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+
+time="2026-11-02T13:04:59Z" level=info msg="OK  public catalog sans token -> 200 | obtenu=200 | www-authenticate=-" source=console
+time="2026-11-02T13:04:59Z" level=info msg="OK  orders sans token -> 401 | obtenu=401 | www-authenticate=Bearer realm=\"lab\"" source=console
+time="2026-11-02T13:04:59Z" level=info msg="OK  orders token valide -> 200 | obtenu=200 | www-authenticate=-" source=console
+time="2026-11-02T13:04:59Z" level=info msg="OK  orders token malformé -> 401 | obtenu=401 | www-authenticate=Bearer realm=\"lab\", error=\"invalid_token\", error_description=\"invalid jwt: invalid jwt string\"" source=console
+time="2026-11-02T13:04:59Z" level=info msg="OK  orders signature altérée -> 401 | obtenu=401 | www-authenticate=Bearer realm=\"lab\", error=\"invalid_token\", error_description=\"jwt signature verification failed: Verification failed\"" source=console
+time="2026-11-02T13:04:59Z" level=info msg="OK  orders payload modifié (sub) -> 401 | obtenu=401 | www-authenticate=Bearer realm=\"lab\", error=\"invalid_token\", error_description=\"jwt signature verification failed: Verification failed\"" source=console
+time="2026-11-02T13:04:59Z" level=info msg="OK  orders exp modifié (signature cassée) -> 401 | obtenu=401 | www-authenticate=Bearer realm=\"lab\", error=\"invalid_token\", error_description=\"jwt signature verification failed: 'exp' claim expired at Thu, 01 Jan 1970 00:16:40 GMT\"" source=console
+time="2026-11-02T13:04:59Z" level=info msg="OK  orders alg=none -> 401 | obtenu=401 | www-authenticate=Bearer realm=\"lab\", error=\"invalid_token\", error_description=\"token uses \"none\" alg but accept_none_alg is not enabled\"" source=console
+time="2026-11-02T13:04:59Z" level=info msg="OK  orders schéma Basic -> 401 | obtenu=401 | www-authenticate=Bearer realm=\"lab\"" source=console
+     ✓ public catalog sans token -> 200
+     ✓ orders sans token -> 401
+     ✓ orders token valide -> 200
+     ✓ orders token malformé -> 401
+     ✓ orders signature altérée -> 401
+     ✓ orders payload modifié (sub) -> 401
+     ✓ orders exp modifié (signature cassée) -> 401
+     ✓ orders alg=none -> 401
+     ✓ orders schéma Basic -> 401
+
+     checks.........................: 100.00% ✓ 9         ✗ 0
+     data_received..................: 6.7 kB  32 kB/s
+     data_sent......................: 6.8 kB  32 kB/s
+     http_req_blocked...............: avg=228.32µs min=1.25µs   med=3.06µs  max=1.48ms   p(90)=848.14µs p(95)=1.16ms  
+     http_req_connecting............: avg=69.11µs  min=0s       med=0s      max=405.95µs p(90)=297.28µs p(95)=351.62µs
+     http_req_duration..............: avg=19.88ms  min=246.29µs med=878.2µs max=175.81ms p(90)=28.11ms  p(95)=101.96ms
+       { expected_response:true }...: avg=64.8ms   min=6.88ms   med=11.7ms  max=175.81ms p(90)=142.99ms p(95)=159.4ms 
+     http_req_failed................: 70.00%  ✓ 7         ✗ 3
+     http_req_receiving.............: avg=63.5µs   min=18.66µs  med=34.41µs max=173.87µs p(90)=164.57µs p(95)=169.22µs
+     http_req_sending...............: avg=29.17µs  min=3.95µs   med=10.02µs max=136.95µs p(90)=58.17µs  p(95)=97.56µs 
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s      max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=19.78ms  min=219.62µs med=826.2µs max=175.5ms  p(90)=27.99ms  p(95)=101.75ms
+     http_reqs......................: 10      46.709619/s
+     iteration_duration.............: avg=27.59ms  min=27.59ms  med=27.59ms max=27.59ms  p(90)=27.59ms  p(95)=27.59ms 
+     iterations.....................: 1       4.670962/s
+running (00m00.2s), 0/1 VUs, 1 complete and 0 interrupted iterations
+default ✓ [ 100% ] 1 VUs  00m00.0s/10m0s  1/1 shared iters
