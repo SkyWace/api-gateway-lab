@@ -29,16 +29,18 @@
 
 | Cas | Attendu | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|---|
-| catalog public sans token | 200 | | | | |
-| orders sans token | 401 | | | | |
-| orders token valide | 200 | | | | |
-| token malformé | 401 | | | | |
-| signature altérée | 401 | | | | |
-| payload modifié (sub) | 401 | | | | |
-| exp modifié | 401 | | | | |
-| alg=none | 401 | | | | |
-| schéma Basic | 401 | | | | |
+| catalog public sans token | 200 | 200 | | | |
+| orders sans token | 401 | 401 | | | |
+| orders token valide | 200 | 200 | | | |
+| token malformé | 401 | 401 | | | |
+| signature altérée | 401 | 401 | | | |
+| payload modifié (sub) | 401 | 401 | | | |
+| exp modifié | 401 | 401 | | | |
+| alg=none | 401 | 401 | | | |
+| schéma Basic | 401 | 401 | | | |
 | Rotation de clé | accepté sans reconfig | | | | |
 | Token réellement expiré | 401 | | | | |
+
+**Observations Kong (02/11/2026, `results/kong-auth.log`)** — 9/9 conformes. Réponse `WWW-Authenticate: Bearer error="invalid_token"` conforme RFC 6750 sur les tokens invalides. NB : k6 compte les 401 attendus dans `http_req_failed` (70 %) — c'est normal, ce n'est pas un taux d'erreur.
 
 **Décision** — *à compléter*. Question du sujet : *la gateway doit-elle valider les tokens, déléguer, ou les deux ?* → s'appuyer sur la rotation et sur le saut réseau ajouté par la délégation (cf. E4).

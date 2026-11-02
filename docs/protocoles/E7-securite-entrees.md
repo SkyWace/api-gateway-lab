@@ -17,12 +17,12 @@
 
 | Cas | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|
-| CORS origine autorisée | | | | |
-| CORS origine refusée | | | | |
-| Path traversal | | | | |
-| En-tête 16 Ko | | | | |
-| JSON invalide (relayé au backend → 400) | | | | |
-| En-têtes divulgués | | | | |
+| CORS origine autorisée | OK (Allow-Origin/Methods/Headers, Max-Age 600) | | | |
+| CORS origine refusée | renvoie l'origine configurée, pas l'origine hostile → bloqué par le navigateur | | | |
+| Path traversal | normalisé → 401 (pas de contournement) | | | |
+| En-tête 16 Ko | 400 (rejet NGINX) | | | |
+| JSON invalide (relayé au backend → 400) | 400 | | | |
+| En-têtes divulgués | `Server`/`Via: kong/3.9.1`, `X-Kong-*` (latences, request-id) → `KONG_HEADERS=off` en prod | | | |
 | TLS / ACME | | | | |
 
 **Décision** — *à compléter*.

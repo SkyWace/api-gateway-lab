@@ -24,9 +24,9 @@
 
 | | Direct | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|---|
-| P50 catalog (ms) | | | | | |
-| P95 catalog (ms) | | | | | |
-| P99 catalog (ms) | | | | | |
+| P50 catalog (ms) | 0,77 | | | | |
+| P95 catalog (ms) | 2,10 | | | | |
+| P99 catalog (ms) | 4,61 | | | | |
 | Surcoût P95 catalog (ms) | — | | | | |
 | P95 orders avec JWT (ms) | | | | | |
 | RPS max soutenu | | | | | |

@@ -18,9 +18,9 @@
 
 | | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|
-| Cas OK / 5 | | | | |
-| Lignes de config utiles | | | | |
-| Concepts à maîtriser | | | | |
-| Remarques | | | | |
+| Cas OK / 5 | 5/5 | | | |
+| Lignes de config utiles | 91 (dont ~8 de clé PEM) | 78 | 88 | 166 (YAML + Java) |
+| Concepts à maîtriser | service, route, upstream/target, plugin, consumer | | | |
+| Remarques | `strip_path: false` obligatoire ; 404 gateway = `no Route matched` | | | |
 
 **Décision** — *à compléter* (ex. : simplicité de lecture vs richesse d'expression).
