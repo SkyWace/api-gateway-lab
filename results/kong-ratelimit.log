@@ -1,0 +1,194 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/ratelimit.js
+        output: -
+
+     scenarios: (100.00%) 3 scenarios, 30 max VUs, 1m0s max duration (incl. graceful stop):
+              * burst: 0.50 iterations/s for 30s (maxVUs: 5, exec: burst, gracefulStop: 30s)
+              * greedy: 30.00 iterations/s for 30s (maxVUs: 20, gracefulStop: 30s)
+              * polite: 5.00 iterations/s for 30s (maxVUs: 5, gracefulStop: 30s)
+
+
+running (0m01.0s), 00/30 VUs, 36 complete and 0 interrupted iterations
+burst    [   3% ] 0/5 VUs    01.0s/30s  0.50 iters/s
+greedy   [   3% ] 00/20 VUs  01.0s/30s  30.00 iters/s
+polite   [   3% ] 0/5 VUs    01.0s/30s  5.00 iters/s
+
+running (0m02.0s), 00/30 VUs, 71 complete and 0 interrupted iterations
+burst    [   7% ] 0/5 VUs    02.0s/30s  0.50 iters/s
+greedy   [   7% ] 00/20 VUs  02.0s/30s  30.00 iters/s
+polite   [   7% ] 0/5 VUs    02.0s/30s  5.00 iters/s
+
+running (0m03.0s), 00/30 VUs, 107 complete and 0 interrupted iterations
+burst    [  10% ] 0/5 VUs    03.0s/30s  0.50 iters/s
+greedy   [  10% ] 00/20 VUs  03.0s/30s  30.00 iters/s
+polite   [  10% ] 0/5 VUs    03.0s/30s  5.00 iters/s
+
+running (0m04.0s), 00/30 VUs, 142 complete and 0 interrupted iterations
+burst    [  13% ] 0/5 VUs    04.0s/30s  0.50 iters/s
+greedy   [  13% ] 00/20 VUs  04.0s/30s  30.00 iters/s
+polite   [  13% ] 0/5 VUs    04.0s/30s  5.00 iters/s
+
+running (0m05.0s), 00/30 VUs, 178 complete and 0 interrupted iterations
+burst    [  17% ] 0/5 VUs    05.0s/30s  0.50 iters/s
+greedy   [  17% ] 00/20 VUs  05.0s/30s  30.00 iters/s
+polite   [  17% ] 0/5 VUs    05.0s/30s  5.00 iters/s
+
+running (0m06.0s), 00/30 VUs, 213 complete and 0 interrupted iterations
+burst    [  20% ] 0/5 VUs    06.0s/30s  0.50 iters/s
+greedy   [  20% ] 00/20 VUs  06.0s/30s  30.00 iters/s
+polite   [  20% ] 0/5 VUs    06.0s/30s  5.00 iters/s
+
+running (0m07.0s), 00/30 VUs, 249 complete and 0 interrupted iterations
+burst    [  23% ] 0/5 VUs    07.0s/30s  0.50 iters/s
+greedy   [  23% ] 00/20 VUs  07.0s/30s  30.00 iters/s
+polite   [  23% ] 0/5 VUs    07.0s/30s  5.00 iters/s
+
+running (0m08.0s), 00/30 VUs, 284 complete and 0 interrupted iterations
+burst    [  27% ] 0/5 VUs    08.0s/30s  0.50 iters/s
+greedy   [  27% ] 00/20 VUs  08.0s/30s  30.00 iters/s
+polite   [  27% ] 0/5 VUs    08.0s/30s  5.00 iters/s
+
+running (0m09.0s), 00/30 VUs, 320 complete and 0 interrupted iterations
+burst    [  30% ] 0/5 VUs    09.0s/30s  0.50 iters/s
+greedy   [  30% ] 00/20 VUs  09.0s/30s  30.00 iters/s
+polite   [  30% ] 0/5 VUs    09.0s/30s  5.00 iters/s
+
+running (0m10.0s), 00/30 VUs, 355 complete and 0 interrupted iterations
+burst    [  33% ] 0/5 VUs    10.0s/30s  0.50 iters/s
+greedy   [  33% ] 00/20 VUs  10.0s/30s  30.00 iters/s
+polite   [  33% ] 0/5 VUs    10.0s/30s  5.00 iters/s
+
+running (0m11.0s), 00/30 VUs, 391 complete and 0 interrupted iterations
+burst    [  37% ] 0/5 VUs    11.0s/30s  0.50 iters/s
+greedy   [  37% ] 00/20 VUs  11.0s/30s  30.00 iters/s
+polite   [  37% ] 0/5 VUs    11.0s/30s  5.00 iters/s
+
+running (0m12.0s), 00/30 VUs, 426 complete and 0 interrupted iterations
+burst    [  40% ] 0/5 VUs    12.0s/30s  0.50 iters/s
+greedy   [  40% ] 00/20 VUs  12.0s/30s  30.00 iters/s
+polite   [  40% ] 0/5 VUs    12.0s/30s  5.00 iters/s
+
+running (0m13.0s), 00/30 VUs, 462 complete and 0 interrupted iterations
+burst    [  43% ] 0/5 VUs    13.0s/30s  0.50 iters/s
+greedy   [  43% ] 00/20 VUs  13.0s/30s  30.00 iters/s
+polite   [  43% ] 0/5 VUs    13.0s/30s  5.00 iters/s
+
+running (0m14.0s), 00/30 VUs, 497 complete and 0 interrupted iterations
+burst    [  47% ] 0/5 VUs    14.0s/30s  0.50 iters/s
+greedy   [  47% ] 00/20 VUs  14.0s/30s  30.00 iters/s
+polite   [  47% ] 0/5 VUs    14.0s/30s  5.00 iters/s
+
+running (0m15.0s), 00/30 VUs, 533 complete and 0 interrupted iterations
+burst    [  50% ] 0/5 VUs    15.0s/30s  0.50 iters/s
+greedy   [  50% ] 00/20 VUs  15.0s/30s  30.00 iters/s
+polite   [  50% ] 0/5 VUs    15.0s/30s  5.00 iters/s
+
+running (0m16.0s), 00/30 VUs, 568 complete and 0 interrupted iterations
+burst    [  53% ] 0/5 VUs    16.0s/30s  0.50 iters/s
+greedy   [  53% ] 00/20 VUs  16.0s/30s  30.00 iters/s
+polite   [  53% ] 0/5 VUs    16.0s/30s  5.00 iters/s
+
+running (0m17.0s), 00/30 VUs, 604 complete and 0 interrupted iterations
+burst    [  57% ] 0/5 VUs    17.0s/30s  0.50 iters/s
+greedy   [  57% ] 00/20 VUs  17.0s/30s  30.00 iters/s
+polite   [  57% ] 0/5 VUs    17.0s/30s  5.00 iters/s
+
+running (0m18.0s), 00/30 VUs, 639 complete and 0 interrupted iterations
+burst    [  60% ] 0/5 VUs    18.0s/30s  0.50 iters/s
+greedy   [  60% ] 00/20 VUs  18.0s/30s  30.00 iters/s
+polite   [  60% ] 0/5 VUs    18.0s/30s  5.00 iters/s
+
+running (0m19.0s), 00/30 VUs, 675 complete and 0 interrupted iterations
+burst    [  63% ] 0/5 VUs    19.0s/30s  0.50 iters/s
+greedy   [  63% ] 00/20 VUs  19.0s/30s  30.00 iters/s
+polite   [  63% ] 0/5 VUs    19.0s/30s  5.00 iters/s
+
+running (0m20.0s), 00/30 VUs, 710 complete and 0 interrupted iterations
+burst    [  67% ] 0/5 VUs    20.0s/30s  0.50 iters/s
+greedy   [  67% ] 00/20 VUs  20.0s/30s  30.00 iters/s
+polite   [  67% ] 0/5 VUs    20.0s/30s  5.00 iters/s
+
+running (0m21.0s), 00/30 VUs, 746 complete and 0 interrupted iterations
+burst    [  70% ] 0/5 VUs    21.0s/30s  0.50 iters/s
+greedy   [  70% ] 00/20 VUs  21.0s/30s  30.00 iters/s
+polite   [  70% ] 0/5 VUs    21.0s/30s  5.00 iters/s
+
+running (0m22.0s), 00/30 VUs, 781 complete and 0 interrupted iterations
+burst    [  73% ] 0/5 VUs    22.0s/30s  0.50 iters/s
+greedy   [  73% ] 00/20 VUs  22.0s/30s  30.00 iters/s
+polite   [  73% ] 0/5 VUs    22.0s/30s  5.00 iters/s
+
+running (0m23.0s), 00/30 VUs, 817 complete and 0 interrupted iterations
+burst    [  77% ] 0/5 VUs    23.0s/30s  0.50 iters/s
+greedy   [  77% ] 00/20 VUs  23.0s/30s  30.00 iters/s
+polite   [  77% ] 0/5 VUs    23.0s/30s  5.00 iters/s
+
+running (0m24.0s), 00/30 VUs, 852 complete and 0 interrupted iterations
+burst    [  80% ] 0/5 VUs    24.0s/30s  0.50 iters/s
+greedy   [  80% ] 00/20 VUs  24.0s/30s  30.00 iters/s
+polite   [  80% ] 0/5 VUs    24.0s/30s  5.00 iters/s
+
+running (0m25.0s), 00/30 VUs, 888 complete and 0 interrupted iterations
+burst    [  83% ] 0/5 VUs    25.0s/30s  0.50 iters/s
+greedy   [  83% ] 00/20 VUs  25.0s/30s  30.00 iters/s
+polite   [  83% ] 0/5 VUs    25.0s/30s  5.00 iters/s
+
+running (0m26.0s), 00/30 VUs, 923 complete and 0 interrupted iterations
+burst    [  87% ] 0/5 VUs    26.0s/30s  0.50 iters/s
+greedy   [  87% ] 00/20 VUs  26.0s/30s  30.00 iters/s
+polite   [  87% ] 0/5 VUs    26.0s/30s  5.00 iters/s
+
+running (0m27.0s), 00/30 VUs, 959 complete and 0 interrupted iterations
+burst    [  90% ] 0/5 VUs    27.0s/30s  0.50 iters/s
+greedy   [  90% ] 00/20 VUs  27.0s/30s  30.00 iters/s
+polite   [  90% ] 0/5 VUs    27.0s/30s  5.00 iters/s
+
+running (0m28.0s), 00/30 VUs, 994 complete and 0 interrupted iterations
+burst    [  93% ] 0/5 VUs    28.0s/30s  0.50 iters/s
+greedy   [  93% ] 00/20 VUs  28.0s/30s  30.00 iters/s
+polite   [  93% ] 0/5 VUs    28.0s/30s  5.00 iters/s
+
+running (0m29.0s), 00/30 VUs, 1030 complete and 0 interrupted iterations
+burst    [  97% ] 0/5 VUs    29.0s/30s  0.50 iters/s
+greedy   [  97% ] 00/20 VUs  29.0s/30s  30.00 iters/s
+polite   [  97% ] 0/5 VUs    29.0s/30s  5.00 iters/s
+
+running (0m30.0s), 00/30 VUs, 1065 complete and 0 interrupted iterations
+burst    [ 100% ] 0/5 VUs    30.0s/30s  0.50 iters/s
+greedy   [ 100% ] 00/20 VUs  30.0s/30s  30.00 iters/s
+polite   [ 100% ] 0/5 VUs    30.0s/30s  5.00 iters/s
+     accepted[2m.......................:[0m [36m640[0m    [36;2m21.309164/s[0m
+     [32m✓[0m { client:client-burst }[2m......:[0m [36m182[0m    [36;2m6.059794/s[0m
+     [32m✓[0m { client:client-greedy }[2m.....:[0m [36m308[0m    [36;2m10.255035/s[0m
+     [32m✓[0m { client:client-polite }[2m.....:[0m [36m150[0m    [36;2m4.994335/s[0m
+     data_received[2m..................:[0m [36m989 kB[0m [36;2m33 kB/s[0m
+     data_sent[2m......................:[0m [36m168 kB[0m [36;2m5.6 kB/s[0m
+     http_req_blocked[2m...............:[0m avg=[36m55.57µs[0m  min=[36m666ns[0m    med=[36m11.25µs[0m max=[36m5.39ms[0m  p(90)=[36m30.29µs[0m  p(95)=[36m116.91µs[0m
+     http_req_connecting[2m............:[0m avg=[36m26.36µs[0m  min=[36m0s[0m       med=[36m0s[0m      max=[36m5.3ms[0m   p(90)=[36m0s[0m       p(95)=[36m0s[0m      
+     http_req_duration[2m..............:[0m avg=[36m3.89ms[0m   min=[36m228.54µs[0m med=[36m2.15ms[0m  max=[36m53.93ms[0m p(90)=[36m9.13ms[0m   p(95)=[36m12.44ms[0m 
+       { expected_response:true }[2m...:[0m avg=[36m6.38ms[0m   min=[36m613.41µs[0m med=[36m3.94ms[0m  max=[36m53.93ms[0m p(90)=[36m12.53ms[0m  p(95)=[36m18.6ms[0m  
+     http_req_failed[2m................:[0m [36m55.89%[0m [36;2m✓ 811[0m       [36;2m✗ 640[0m 
+     http_req_receiving[2m.............:[0m avg=[36m152.07µs[0m min=[36m7.75µs[0m   med=[36m96.62µs[0m max=[36m9.36ms[0m  p(90)=[36m203.79µs[0m p(95)=[36m335.81µs[0m
+     http_req_sending[2m...............:[0m avg=[36m65.67µs[0m  min=[36m1.87µs[0m   med=[36m41.16µs[0m max=[36m5.22ms[0m  p(90)=[36m94.45µs[0m  p(95)=[36m129.29µs[0m
+     http_req_tls_handshaking[2m.......:[0m avg=[36m0s[0m       min=[36m0s[0m       med=[36m0s[0m      max=[36m0s[0m      p(90)=[36m0s[0m       p(95)=[36m0s[0m      
+     http_req_waiting[2m...............:[0m avg=[36m3.68ms[0m   min=[36m186.66µs[0m med=[36m1.96ms[0m  max=[36m53.89ms[0m p(90)=[36m8.67ms[0m   p(95)=[36m12.19ms[0m 
+     http_reqs[2m......................:[0m [36m1451[0m   [36;2m48.311871/s[0m
+     iteration_duration[2m.............:[0m avg=[36m3.82ms[0m   min=[36m310.37µs[0m med=[36m2.38ms[0m  max=[36m88.34ms[0m p(90)=[36m6.58ms[0m   p(95)=[36m10.07ms[0m 
+     iterations[2m.....................:[0m [36m1067[0m   [36;2m35.526372/s[0m
+     limited_429[2m....................:[0m [36m811[0m    [36;2m27.002707/s[0m
+     [32m✓[0m { client:client-burst }[2m......:[0m [36m218[0m    [36;2m7.258434/s[0m
+     [32m✓[0m { client:client-greedy }[2m.....:[0m [36m593[0m    [36;2m19.744273/s[0m
+     [32m✓[0m { client:client-polite }[2m.....:[0m [36m0[0m      [36;2m0/s[0m
+     vus[2m............................:[0m [36m0[0m      [36;2mmin=0[0m       [36;2mmax=0[0m 
+     vus_max[2m........................:[0m [36m30[0m     [36;2mmin=30[0m      [36;2mmax=30[0m
+running (0m30.0s), 00/30 VUs, 1067 complete and 0 interrupted iterations
+burst  ✓ [ 100% ] 0/5 VUs    30s  0.50 iters/s
+greedy ✓ [ 100% ] 00/20 VUs  30s  30.00 iters/s
+polite ✓ [ 100% ] 0/5 VUs    30s  5.00 iters/s

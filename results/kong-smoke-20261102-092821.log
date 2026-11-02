@@ -1,0 +1,9 @@
+=== Smoke kong (http://localhost:8001) — 2026-11-02T09:28:22+01:00
+--- Routage
+OK  [200] GET /api/catalog -> catalog
+OK  [200] GET /api/catalog/7
+OK  [404] GET /api/catalog/999 (404 backend)
+OK  [404] Route inconnue /api/unknown
+OK  [404] /admin/chaos non exposé par la gateway
+--- Authentification
+OK  [401] orders sans token

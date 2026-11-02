@@ -1,0 +1,253 @@
+{
+  "state": {
+    "isStdOutTTY": false,
+    "isStdErrTTY": false,
+    "testRunDurationMs": 202.478458
+  },
+  "metrics": {
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 42.59825,
+        "min": 42.59825,
+        "med": 42.59825,
+        "max": 42.59825,
+        "p(90)": 42.59825,
+        "p(95)": 42.59825
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 6813,
+        "rate": 33648.02392953822
+      }
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 5696,
+        "rate": 28131.38768569642
+      }
+    },
+    "http_req_sending": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 0.4607002999999998,
+        "avg": 0.10296250000000003,
+        "min": 0.004459,
+        "med": 0.0126875,
+        "max": 0.74675,
+        "p(90)": 0.17465060000000013
+      }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0.0024165000000000002,
+        "max": 2.156333,
+        "p(90)": 1.650533,
+        "p(95)": 1.9034329999999997,
+        "avg": 0.3777582,
+        "min": 0.001208
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0,
+        "max": 0.764208,
+        "p(90)": 0.5082705000000001,
+        "p(95)": 0.6362392499999999,
+        "avg": 0.12440409999999999,
+        "min": 0
+      }
+    },
+    "checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 1,
+        "passes": 9,
+        "fails": 0
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0,
+        "min": 0
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "values": {
+        "avg": 60.66386133333333,
+        "min": 12.593959,
+        "med": 14.080708,
+        "max": 155.316917,
+        "p(90)": 127.0696752,
+        "p(95)": 141.1932961
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "http_reqs": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 10,
+        "rate": 49.387969953820964
+      }
+    },
+    "iterations": {
+      "contains": "default",
+      "values": {
+        "rate": 4.938796995382097,
+        "count": 1
+      },
+      "type": "counter"
+    },
+    "http_req_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 19.289958399999996,
+        "min": 0.358125,
+        "med": 2.1984585,
+        "max": 155.316917,
+        "p(90)": 28.20432890000003,
+        "p(95)": 91.76062294999994
+      }
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 19.0844418,
+        "min": 0.316041,
+        "med": 1.925667,
+        "max": 154.730291,
+        "p(90)": 28.048316900000028,
+        "p(95)": 91.38930394999994
+      }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.10255410000000001,
+        "min": 0.017791,
+        "med": 0.0481665,
+        "max": 0.475542,
+        "p(90)": 0.19346670000000005,
+        "p(95)": 0.3345043499999999
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.7,
+        "passes": 7,
+        "fails": 3
+      }
+    }
+  },
+  "setup_data": {
+    "token": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJnLXhqRGlfeGlDNTBfa2pmMkFBejlZWVA4d3dTVF93Ty1IbXA2MDZyREZjIn0.eyJleHAiOjE3OTM2MTIwMTEsImlhdCI6MTc5MzYwODQxMSwianRpIjoiNGNiYjY1ZWEtOWZjNC00ZGNhLWEyZGQtZDMyNzFiMWY1MmE4IiwiaXNzIjoiaHR0cDovL2tleWNsb2FrOjgwODAvcmVhbG1zL2xhYiIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiIwMjE0N2FkOC0yODUyLTQ2NjgtYmRiYy1iNGQ2ZDljM2RhYWMiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJsYWItY2xpZW50IiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtbGFiIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImNsaWVudEhvc3QiOiIxNzIuMjcuMC43IiwicHJlZmVycmVkX3VzZXJuYW1lIjoic2VydmljZS1hY2NvdW50LWxhYi1jbGllbnQiLCJjbGllbnRBZGRyZXNzIjoiMTcyLjI3LjAuNyIsImNsaWVudF9pZCI6ImxhYi1jbGllbnQifQ.bP9jPW3pb3_4HmQwZK6etXg-00uOyYJfUBnnQfSY9h6Ifz5Yie1_a9t_nUXe2VEl4DZn5khQf_hu3AmMIdlcRjuTNHucPClFQGKzaS8wklvqdwjFLk9AgaExO3nXyD8YEXSyOuEa3tq5gtae4SYg8l9N_vhidIKn3F79mNjm-s9LXywEK9vUaGBlbrN86QA067bJ_ExZWM8rKORbGP0lWCcoTfoTgrMP0la1c9AMgq_EqXF72Wzt2Obk0hjDkZfZmjfD3ma7ISufIjCf8TCv5SRRMJGNLr6ZOgUwg-KwXsqLF1-VijIe8mpqO9KcK5vLMsGJn8o8enlva1kg0RAofg"
+  },
+  "root_group": {
+    "groups": [],
+    "checks": [
+        {
+          "id": "7c276249a40008f8badec0b05269485c",
+          "passes": 1,
+          "fails": 0,
+          "name": "public catalog sans token -> 200",
+          "path": "::public catalog sans token -> 200"
+        },
+        {
+          "name": "orders sans token -> 401",
+          "path": "::orders sans token -> 401",
+          "id": "1609742cfa479b0241bd00db377b8e08",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "name": "orders token valide -> 200",
+          "path": "::orders token valide -> 200",
+          "id": "7b8d549fb9feddfe8525e492efdf2149",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "passes": 1,
+          "fails": 0,
+          "name": "orders token malformé -> 401",
+          "path": "::orders token malformé -> 401",
+          "id": "b6563ce23c59daa103de3eca2940540a"
+        },
+        {
+          "name": "orders signature altérée -> 401",
+          "path": "::orders signature altérée -> 401",
+          "id": "f7d1e3070e66b576b4cf52b8a5bc9ac3",
+          "passes": 1,
+          "fails": 0
+        },
+        {
+          "fails": 0,
+          "name": "orders payload modifié (sub) -> 401",
+          "path": "::orders payload modifié (sub) -> 401",
+          "id": "f891183bce13eb3cef2e987709fa01d9",
+          "passes": 1
+        },
+        {
+          "path": "::orders exp modifié (signature cassée) -> 401",
+          "id": "a75c8c5ebfe0eac0959f297718e2212b",
+          "passes": 1,
+          "fails": 0,
+          "name": "orders exp modifié (signature cassée) -> 401"
+        },
+        {
+          "passes": 1,
+          "fails": 0,
+          "name": "orders alg=none -> 401",
+          "path": "::orders alg=none -> 401",
+          "id": "efbc3473c29c5e42397eee9e2be5bd63"
+        },
+        {
+          "passes": 1,
+          "fails": 0,
+          "name": "orders schéma Basic -> 401",
+          "path": "::orders schéma Basic -> 401",
+          "id": "6b2cd9205c8c4d8cb14557f22cf8f09d"
+        }
+      ],
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "options": {
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": "",
+    "noColor": false
+  }
+}
