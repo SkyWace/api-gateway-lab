@@ -33,7 +33,7 @@ export function summaryTo(testName) {
     const stamp = new Date().toISOString().replace(/[:.]/g, '-');
     const file = `/results/${__ENV.TARGET || 'direct'}-${testName}-${stamp}.json`;
     return {
-      stdout: textSummary(data, { indent: ' ', enableColors: true }),
+      stdout: textSummary(data, { indent: ' ', enableColors: false }),
       [file]: JSON.stringify(data, null, 2),
     };
   };
