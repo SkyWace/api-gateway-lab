@@ -28,3 +28,7 @@ Une ligne par exécution, y compris les runs ratés (ils font partie de la déma
 | 02/11 ~09:45 | E4 | kong | `latency.js` | `results/kong-latency-2.log` | P50 1,63 / P95 15,48 / P99 120 ms | 118 dropped_iterations → hôte saturé, à rejouer |
 | 02/11 ~09:47 | E4 | kong | `latency.js` | `results/kong-latency-3.log` | P50 1,74 / P95 7,37 / P99 79,9 ms | 15 dropped_iterations → à rejouer |
 | 02/11 09:49 | E4 | kong | `latency.js ENDPOINT=orders` | — | échec setup() | Token Keycloak non obtenu (réponse vide) → vérifier l'état de Keycloak |
+| 02/11 ~09:52 | E4 | direct | `latency.js` | `results/direct-latency-3.log` | P50 0,75 / P95 2,10 / P99 4,16 ms | Run 3/3 |
+| 02/11 ~09:54 | E4 | kong | `latency.js` (rejeu) | `results/kong-latency-2.log` | P50 1,57 / P95 4,06 / P99 19,6 ms | 0 dropped |
+| 02/11 ~09:56 | E4 | kong | `latency.js` (rejeu) | `results/kong-latency-3.log` | P50 1,83 / P95 3,65 / P99 5,61 ms | 0 dropped |
+| 02/11 09:57 | E4 | kong | `latency.js ENDPOINT=orders` | — | échec setup() | Cause : bug du script (discardResponseBodies vidait la réponse token) → corrigé |

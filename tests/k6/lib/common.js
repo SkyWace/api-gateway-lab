@@ -22,7 +22,7 @@ export function getToken() {
     grant_type: 'client_credentials',
     client_id: 'lab-client',
     client_secret: 'lab-secret',
-  });
+  }, { responseType: 'text' }); // indispensable : les scripts de charge activent discardResponseBodies
   if (res.status !== 200) throw new Error(`Token Keycloak impossible : ${res.status} ${res.body}`);
   return res.json('access_token');
 }

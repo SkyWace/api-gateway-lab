@@ -24,10 +24,10 @@
 
 | | Direct | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|---|
-| P50 catalog (ms) | 0,77 | | | | |
-| P95 catalog (ms) | 2,10 | | | | |
-| P99 catalog (ms) | 4,61 | | | | |
-| Surcoût P95 catalog (ms) | — | | | | |
+| P50 catalog (ms) | 0,77 | 1,57 | | | |
+| P95 catalog (ms) | 2,10 | 3,65 | | | |
+| P99 catalog (ms) | 4,61 | 5,65 | | | |
+| Surcoût P95 catalog (ms) | — | +1,55 (P50 +0,80) | | | |
 | P95 orders avec JWT (ms) | | | | | |
 | RPS max soutenu | | | | | |
 | CPU au palier max (%) | | | | | |
@@ -39,11 +39,12 @@
 |---|---|---|---|---|---|---|---|
 | 1 | direct | 0,77 | 2,10 | 4,61 | 0 % | 0 | `direct-latency-1.log` |
 | 2 | direct | 0,80 | 2,16 | 5,22 | 0 % | 0 | `direct-latency-2.log` |
-| 3 | direct | | | | | | `direct-latency-3.log` |
+| 3 | direct | 0,75 | 2,10 | 4,16 | 0 % | 0 | `direct-latency-3.log` |
 | échauffement | kong (30 s) | 1,30 | 3,39 | 6,81 | 0 % | 0 | jeté |
 | 1 | kong | 1,55 | 3,55 | 5,65 | 0 % | 0 | `kong-latency-1.log` |
-| 2 | kong | 1,63 | 15,48 | 120,02 | 0 % | **118** | `kong-latency-2.log` |
-| 3 | kong | 1,74 | 7,37 | 79,86 | 0 % | **15** | `kong-latency-3.log` |
+| 2 (rejoué) | kong | 1,57 | 4,06 | 19,57 | 0 % | 0 | `kong-latency-2.log` |
+| 3 (rejoué) | kong | 1,83 | 3,65 | 5,61 | 0 % | 0 | `kong-latency-3.log` |
+| 2 et 3 initiaux | kong | 1,63 / 1,74 | 15,48 / 7,37 | 120 / 79,9 | 0 % | 118 / 15 | écartés (hôte saturé) |
 
 > Règle de validité adoptée : un run avec `dropped_iterations` > 0 signale que **le générateur (k6) ou l'hôte** a saturé, pas forcément la gateway. Ces runs sont rejoués machine au repos ; s'ils restent bruités, ils sont conservés et signalés. Machine : MacBook Air (refroidissement passif → bridage thermique possible sous charge prolongée, d'où une pause de 1–2 min entre runs).
 >
