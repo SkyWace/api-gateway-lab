@@ -12,10 +12,10 @@ Quatre solutions en édition gratuite — Kong Gateway OSS 3.9.1, Apache APISIX 
 
 ## Résultats marquants
 
-- **Sécurité** — [les 4 rejettent / X rejette… les 8 cas de token invalide]. Kong OSS ne lit pas le JWKS : la clé publique est copiée dans sa configuration, donc [la rotation de clé a cassé l'accès / a nécessité une reconfiguration]. Traefik OSS ne valide pas de JWT : il a fallu écrire un service de validation externe.
-- **Performance** — surcoût P95 à 200 req/s : Kong [x] ms, APISIX [x] ms, Traefik [x] ms, SCG [x] ms. Débit max soutenu : [x / x / x / x] req/s. [Toutes / X ne] dépassent le pic visé de 1 500 req/s.
-- **Quotas** — même réglage, comportements différents : fenêtre fixe (Kong, APISIX) vs token bucket (Traefik, SCG). [Écart mesuré au quota]. Seul SCG partage ses compteurs (Redis) ; les autres comptent par instance, donc un quota de 10 req/s devient 20 req/s avec 2 instances de gateway.
-- **Résilience** — perte d'une instance : [x %] d'erreurs. Backend en erreur : APISIX, Traefik et SCG ont ouvert le circuit [en x s] ; Kong OSS, sans circuit breaker, a [relayé les 500 au client].
+- **Sécurité** — Kong : 8/8 tokens invalides rejetés en 401 (+ accès public OK) ; APISIX [ ], Traefik [ ], SCG [ ]. Kong OSS ne lit pas le JWKS : la clé publique est copiée dans sa configuration, donc [la rotation de clé a cassé l'accès / a nécessité une reconfiguration]. Traefik OSS ne valide pas de JWT : il a fallu écrire un service de validation externe.
+- **Performance** — surcoût P95 à 200 req/s (1 vCPU) : Kong +1,6 ms, APISIX [x] ms, Traefik [x] ms, SCG [x] ms. Débit : Kong sert 3 000 req/s sans erreur mais CPU à 97 % et P99 > 100 ms dès 1 500 req/s ; APISIX [ ], Traefik [ ], SCG [ ].
+- **Quotas** — même réglage, comportements différents : fenêtre fixe (Kong, APISIX) vs token bucket (Traefik, SCG). Kong : client gourmand tenu à 10,27 req/s (+2,7 %), aucun refus pour le client raisonnable, ~11,4 requêtes acceptées par rafale (effet fenêtre fixe) ; [autres]. Seul SCG partage ses compteurs (Redis) ; les autres comptent par instance, donc un quota de 10 req/s devient 20 req/s avec 2 instances de gateway.
+- **Résilience** — perte d'une instance catalogue : Kong 0 % d'erreur (retries + health checks, réintégration ≈ 5 s) ; [autres]. Backend en erreur : Kong OSS n'a pas de circuit breaker ; son health check passif a coupé le backend après 3 erreurs… **sans jamais le réintégrer** (503 pendant toute la suite du test, 30 s de panne réelle). APISIX, Traefik, SCG : [ ].
 - **Observabilité** — corrélation native chez Kong et APISIX, ajoutée par un filtre chez SCG, absente chez Traefik sans tracing.
 - **Exploitation** — changement de route sans interruption en [x] s pour Kong, APISIX et Traefik ; redéploiement avec [x] s d'indisponibilité pour SCG.
 
@@ -43,7 +43,7 @@ Pourquoi (à étayer par les mesures) : c'est la seule des quatre qui couvre **e
 - Mesures sur poste de développement sous Docker, sans TLS, une seule instance de gateway : résultats valables en **relatif**, pas comme dimensionnement de production.
 - Haute disponibilité et Kubernetes non testés : la question des quotas partagés (Redis) et de la configuration (etcd pour APISIX, CRD pour Traefik/Kong) reste à valider sur un cluster.
 - Fonctions des éditions payantes volontairement exclues ; une évaluation Kong Enterprise / Traefik Hub changerait la comparaison.
-- [Incidents rencontrés pendant les tests et leur impact sur la confiance dans les chiffres.]
+- Incidents de protocole, détectés et corrigés : (1) limite CPU ignorée par Docker Desktop macOS (clé `cpus:`) → mesures de perf Kong rejouées avec `deploy.resources` et vérification `check-limits.sh` ; (2) générateur k6 saturant pendant l'allocation de VU → 600 VU pré-alloués ; (3) bruit de l'hôte (MacBook Air, refroidissement passif) → runs avec `dropped_iterations` rejoués, médiane de 3 runs.
 
 ## Prochaines étapes
 
