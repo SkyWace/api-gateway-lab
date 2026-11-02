@@ -95,4 +95,5 @@ Tous les résultats sont écrits dans `results/` (JSON k6, logs, CSV CPU/RAM). L
 | SCG en erreur au démarrage | Redis / Keycloak pas prêts : `docker compose --profile scg restart scg` |
 | Kong : `no Route matched` | Vérifier `docker compose logs kong` (erreur de parsing de `kong.yml`) |
 | k6 : `dropped_iterations` | Le générateur sature : baisser `RATE`, ou augmenter `preAllocatedVUs` |
+| Limites CPU/RAM à vérifier | `./scripts/check-limits.sh` : aucune ligne ne doit afficher AUCUNE |
 | Ports déjà utilisés | Adapter la section `ports` du compose et `scripts/env.sh` |

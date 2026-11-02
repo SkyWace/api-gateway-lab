@@ -28,10 +28,12 @@
 | P95 catalog (ms) | 2,10 | 3,65 | | | |
 | P99 catalog (ms) | 4,61 | 5,65 | | | |
 | Surcoût P95 catalog (ms) | — | +1,55 (P50 +0,80) | | | |
-| P95 orders avec JWT (ms) | | | | | |
+| P95 orders avec JWT (ms) | — | 14,55 (P50 1,61 ; 53 dropped, sans limite CPU) | | | |
 | RPS max soutenu | — | ≥ 3 000 (0 erreur) | | | |
 | CPU au palier max (%) | — | ~120 (pic) | | | |
 | RAM max (Mo) | — | ~206 | | | |
+
+> ⚠️ **Incident de protocole (02/11, 11:08)** — `docker inspect` a montré `NanoCpus=0` : sur Docker Desktop macOS, la clé `cpus:` au niveau service était **ignorée**. Les mesures Kong ci-dessous (latence et débit) ont donc été faites **sans limite CPU** (seule la limite RAM de 512 Mo était active). Correctif : limites passées en `deploy.resources.limits` + script `scripts/check-limits.sh`. Les mesures de perf Kong sont **rejouées** avec la limite ; les anciennes sont conservées pour trace mais exclues de la comparaison.
 
 **Mesures brutes (200 req/s, 60 s, route catalog)**
 

@@ -65,7 +65,7 @@ flowchart LR
 
 | Élément | Limite |
 |---|---|
-| Chaque gateway | 1 vCPU, 512 Mo (`x-gw-limits`) |
+| Chaque gateway | 1 vCPU, 512 Mo (`x-gw-limits`, via `deploy.resources.limits` ; vérifier avec `scripts/check-limits.sh`) |
 | Kong / APISIX | 1 worker NGINX (cohérent avec 1 vCPU) |
 | SCG | JVM `MaxRAMPercentage=75` (≈ 384 Mo de heap max) |
 | Chaque backend | 0,5 vCPU, 256 Mo |

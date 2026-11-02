@@ -23,7 +23,7 @@
 
 | | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|
-| Répartition catalog-1 / catalog-2 | | | | |
+| Répartition catalog-1 / catalog-2 | 500 / 500 (round-robin exact) | | | |
 | kill-catalog2 : erreurs (nb, %) | | | | |
 | kill-catalog2 : réintégration (s) | | | | |
 | slow-orders : code / durée max | | | | |
