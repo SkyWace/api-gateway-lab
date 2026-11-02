@@ -24,16 +24,29 @@
 
 | | Direct | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|---|
-| P50 catalog (ms) | 0,77 | 1,57 | | | |
-| P95 catalog (ms) | 2,10 | 3,65 | | | |
-| P99 catalog (ms) | 4,61 | 5,65 | | | |
-| Surcoût P95 catalog (ms) | — | +1,55 (P50 +0,80) | | | |
-| P95 orders avec JWT (ms) | — | 14,55 (P50 1,61 ; 53 dropped, sans limite CPU) | | | |
-| RPS max soutenu | — | ≥ 3 000 (0 erreur) | | | |
-| CPU au palier max (%) | — | ~120 (pic) | | | |
-| RAM max (Mo) | — | ~206 | | | |
+| P50 catalog (ms) | 0,77 | 1,62 | | | |
+| P95 catalog (ms) | 2,10 | 3,70 | | | |
+| P99 catalog (ms) | 4,61 | 6,95 | | | |
+| Surcoût P95 catalog (ms) | — | +1,60 (P50 +0,85 ; P99 +2,34) | | | |
+| P95 orders avec JWT (ms) | — | 3,58 (P50 1,61) | | | |
+| RPS max soutenu | — | à rejouer avec limite CPU | | | |
+| CPU au palier max (%) | — | à rejouer | | | |
+| RAM max (Mo) | — | à rejouer (~206 sans limite CPU) | | | |
 
 > ⚠️ **Incident de protocole (02/11, 11:08)** — `docker inspect` a montré `NanoCpus=0` : sur Docker Desktop macOS, la clé `cpus:` au niveau service était **ignorée**. Les mesures Kong ci-dessous (latence et débit) ont donc été faites **sans limite CPU** (seule la limite RAM de 512 Mo était active). Correctif : limites passées en `deploy.resources.limits` + script `scripts/check-limits.sh`. Les mesures de perf Kong sont **rejouées** avec la limite ; les anciennes sont conservées pour trace mais exclues de la comparaison.
+
+**Kong — mesures retenues, avec limite 1 vCPU vérifiée (`check-limits.sh`)**
+
+| Run | Route | P50 (ms) | P95 (ms) | P99 (ms) | Erreurs | dropped | Fichier |
+|---|---|---|---|---|---|---|---|
+| 1 | catalog | 1,62 | 3,68 | 6,07 | 0 % | 0 | `kong-latency-1.log` |
+| 2 | catalog | 1,57 | 3,72 | 6,95 | 0 % | 0 | `kong-latency-2.log` |
+| 3 | catalog | 1,62 | 3,70 | 7,14 | 0 % | 0 | `kong-latency-3.log` |
+| — | orders (JWT) | 1,61 | 3,58 | 8,13 | 0 % | 0 | `kong-latency-orders.log` |
+
+Lecture : runs très reproductibles (écart P95 < 0,05 ms). Médiane catalog : P50 1,62 / P95 3,70 / P99 6,95 ms. La validation JWT ne coûte rien de mesurable en médiane (1,61 vs 1,62 ms).
+
+*Les tableaux suivants (« mesures brutes ») sont l'historique avant correction de la limite CPU — conservés pour trace.*
 
 **Mesures brutes (200 req/s, 60 s, route catalog)**
 
