@@ -30,4 +30,4 @@
 | 429 / 5xx visibles en métriques | | | | |
 | Effort de mise en place | | | | |
 
-**Décision** — *à compléter*.
+**Décision** — Les deux assurent la corrélation (`X-Request-ID`). Kong est plus lisible sans outillage (latences gateway/upstream dans chaque réponse). Expérience partielle : la capture Prometheus n'a pas été réalisée.

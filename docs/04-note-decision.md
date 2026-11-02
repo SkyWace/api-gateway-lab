@@ -1,52 +1,91 @@
 # 4. Note de décision — Choix d'une API Gateway pour NordFlux
 
-> **Statut : brouillon.** Les passages entre crochets `[…]` sont à remplacer par les mesures réelles (E1–E8). La recommandation ci-dessous est l'**hypothèse issue de l'étude documentaire et de la conception du POC** ; elle doit être confirmée ou infirmée par les résultats. Si les mesures la contredisent, c'est la mesure qui gagne. Viser 1 à 2 pages une fois complétée.
-
 ## Contexte et exigences
 
-NordFlux expose une douzaine de microservices à des clients web, mobiles et internes. Le besoin : un point d'entrée unique qui valide les JWT émis par Keycloak, limite les abus par client (10 req/s), protège les clients des pannes de backend et permet de suivre une requête de bout en bout. Pic visé : 1 500 req/s. Cible de production : Kubernetes. Contrainte : fonctions cœur sans licence payante.
+NordFlux expose une douzaine de microservices à des clients web, mobiles et internes. Il lui faut un point d'entrée unique qui :
+- valide les JWT émis par Keycloak ;
+- limite les abus à 10 req/s par client ;
+- protège les clients des pannes de backend ;
+- permet de suivre une requête de bout en bout.
+
+Pic visé : 1 500 req/s. Cible de production : Kubernetes. Contrainte : les fonctions cœur doivent être disponibles sans licence payante.
 
 ## Ce qui a été comparé
 
-Quatre solutions en édition gratuite — Kong Gateway OSS 3.9.1, Apache APISIX 3.11, Traefik Proxy v3.3, Spring Cloud Gateway 4.2 — sur un parcours identique (2 API factices, Keycloak, mêmes données, 1 vCPU / 512 Mo par gateway), au travers de 8 expériences : routage, authentification, rate limiting, latence/débit, résilience, observabilité, sécurité des entrées, déploiement à chaud.
+**Kong Gateway OSS 3.9.1** et **Apache APISIX 3.11**, en édition gratuite, sur un parcours identique :
+- deux API factices (catalogue sur 2 instances, commandes sur 1) ;
+- Keycloak et des jeux de données figés ;
+- **1 vCPU / 512 Mo par gateway**, limite vérifiée par `docker inspect`.
+
+Sept expériences ont été menées, toutes rejouables (dépôt Git, `results/`, `docs/graphs/`). Traefik et Spring Cloud Gateway sont configurés dans le dépôt mais n'ont pas été mesurés : le périmètre a été réduit à deux solutions, ce que le sujet autorise.
 
 ## Résultats marquants
 
-- **Sécurité** — Kong et APISIX : 8/8 tokens invalides rejetés en 401 (APISIX détaille trop la cause de l'erreur) ; Traefik [ ], SCG [ ]. Kong OSS ne lit pas le JWKS : la clé publique est copiée dans sa configuration, donc [la rotation de clé a cassé l'accès / a nécessité une reconfiguration]. Traefik OSS ne valide pas de JWT : il a fallu écrire un service de validation externe.
-- **Performance** — surcoût P95 à 200 req/s (1 vCPU) : Kong +1,6 ms, APISIX +0,6 ms, Traefik [x] ms, SCG [x] ms. Débit : Kong sert 3 000 req/s sans erreur mais CPU à 97 % et P99 > 100 ms dès 1 500 req/s ; APISIX 3 000 req/s à 53 % CPU, P95 1,6 ms ; Traefik [ ], SCG [ ].
-- **Quotas** — même réglage, comportements différents : fenêtre fixe (Kong, APISIX) vs token bucket (Traefik, SCG). Kong : client gourmand tenu à 10,27 req/s (+2,7 %), aucun refus pour le client raisonnable, ~11,4 requêtes acceptées par rafale (effet fenêtre fixe) , APISIX exactement 10 req/s et 10 par rafale ; [Traefik, SCG]. Seul SCG partage ses compteurs (Redis) ; les autres comptent par instance, donc un quota de 10 req/s devient 20 req/s avec 2 instances de gateway.
-- **Résilience** — perte d'une instance catalogue : Kong 0 % d'erreur (retries + health checks, réintégration ≈ 5 s) ; APISIX identique. Backend en erreur : Kong OSS n'a pas de circuit breaker ; son health check passif a coupé le backend après 3 erreurs… **sans jamais le réintégrer** (503 pendant toute la suite du test, 30 s de panne réelle). APISIX : circuit ouvert pendant la panne puis refermé en < 10 s (24 % d'erreurs, toutes pendant la panne). Traefik, SCG : [ ].
-- **Observabilité** — corrélation native chez Kong et APISIX, ajoutée par un filtre chez SCG, absente chez Traefik sans tracing.
-- **Exploitation** — changement de route sans interruption en [x] s pour Kong, APISIX et Traefik ; redéploiement avec [x] s d'indisponibilité pour SCG.
+| Expérience | Kong OSS | APISIX |
+|---|---|---|
+| Routage (E1) | 5/5 | 5/5 |
+| Authentification (E2) | 9/9, clé publique statique | 9/9, JWKS |
+| Quota 10 req/s (E3) | 10,27 req/s, 11,4 par rafale | 10,00 req/s, 10 par rafale |
+| Surcoût P95 à 200 req/s (E4) | +1,60 ms | **+0,58 ms** |
+| Coût du JWT, P50 (E4) | ≈ 0 ms | +0,5 ms |
+| 3 000 req/s sur 1 vCPU (E4) | 0 erreur, P95 36 ms, CPU 97 % | 0 erreur, **P95 1,6 ms, CPU 53 %** |
+| RAM sous charge (E4) | ~205 Mo | **~52 Mo** |
+| Perte d'une instance (E5) | 0 erreur | 0 erreur |
+| Backend à 50 % d'erreurs (E5) | **99,9 % d'erreurs, aucune récupération** | 24 % d'erreurs, **retour à la normale < 10 s** |
+| Corrélation (E6) | `X-Request-ID` + latences dans chaque réponse | `X-Request-ID` |
+
+**Le résultat décisif est la résilience** (graphique `06-circuit-breaker.png`). Kong OSS n'a pas de circuit breaker. Son health check passif a retiré le backend après 3 erreurs, puis ne l'a **jamais réintégré** : une panne de 30 s est devenue une coupure durable, jusqu'au redémarrage de Kong. APISIX a ouvert son circuit pendant la panne, laissé passer quelques requêtes de test, puis l'a refermé dès le retour du backend.
+
+![Circuit breaker](graphs/06-circuit-breaker.png)
 
 ## Matrice (synthèse)
 
-| | Kong OSS | APISIX | Traefik | SCG |
-|---|---|---|---|---|
-| Éliminatoires | [ ] | [ ] | [ ] | [ ] |
-| Score pondéré /5 | [ ] | [ ] | [ ] | [ ] |
-| Score pondération « performance » /5 | [ ] | [ ] | [ ] | [ ] |
+| | Kong OSS | APISIX |
+|---|---|---|
+| Critères éliminatoires | aucun déclenché | aucun déclenché |
+| Score pondéré (contexte microservices) | 3,30 / 5 | **4,45 / 5** |
+| Score pondéré (« performance d'abord ») | 3,27 / 5 | **4,51 / 5** |
+
+Le détail et les justifications sont dans `03-matrice-decision.md`. Le classement est stable quelle que soit la pondération.
 
 ## Recommandation
 
-**Hypothèse de recommandation : Apache APISIX** comme gateway de NordFlux, déployée en mode Kubernetes (Ingress Controller ou etcd + plusieurs instances), avec le rate limiting adossé à Redis dès qu'on dépasse une instance.
+**Apache APISIX** pour NordFlux.
 
-Pourquoi (à étayer par les mesures) : c'est la seule des quatre qui couvre **en édition gratuite et sans code** les deux problématiques prioritaires du contexte — résilience (circuit breaker natif) et observabilité (request-id, Prometheus) — tout en validant les tokens via JWKS, donc en suivant la rotation des clés Keycloak.
+Il l'emporte sur les deux critères les plus lourds du contexte microservices :
+- **la résilience**, avec un circuit breaker qui se referme seul ;
+- **la sécurité**, avec une validation JWKS qui suit la rotation des clés Keycloak sans reconfiguration.
 
-**Alternatives selon le contexte** — aucune solution n'est la meilleure dans l'absolu :
-- **Spring Cloud Gateway** si l'équipe est 100 % Java/Spring et les volumes modérés : intégration Spring Security/Resilience4j excellente, extensibilité par le code ; en contrepartie, empreinte JVM, Redis obligatoire pour les quotas et redéploiement pour changer une route.
-- **Traefik** comme **ingress** Kubernetes (TLS, ACME, découverte automatique), éventuellement *devant* une gateway : en OSS il lui manque la validation JWT et la corrélation.
-- **Kong OSS** reste techniquement solide, mais la lignée open source est figée en 3.9.x et les fonctions attendues ici (OIDC/JWKS, quotas avancés) sont en édition payante : risque de pérennité / de coût à moyen terme.
+Il est aussi nettement plus sobre sous charge, et tout ce qui a été utilisé est disponible en Apache 2.0.
 
-## Compromis et limites
+**Conditions de mise en œuvre :**
+- réduire les messages d'erreur JWT, qui révèlent la cause du refus à un éventuel attaquant ;
+- masquer l'en-tête `Server` ;
+- passer le rate limiting sur Redis dès qu'il y a plus d'une instance de gateway, sinon le quota est multiplié par le nombre d'instances ;
+- en production, déployer avec etcd ou l'Ingress Controller plutôt qu'en mode standalone.
 
-- Mesures sur poste de développement sous Docker, sans TLS, une seule instance de gateway : résultats valables en **relatif**, pas comme dimensionnement de production.
-- Haute disponibilité et Kubernetes non testés : la question des quotas partagés (Redis) et de la configuration (etcd pour APISIX, CRD pour Traefik/Kong) reste à valider sur un cluster.
-- Fonctions des éditions payantes volontairement exclues ; une évaluation Kong Enterprise / Traefik Hub changerait la comparaison.
-- Incidents de protocole, détectés et corrigés : (1) limite CPU ignorée par Docker Desktop macOS (clé `cpus:`) → mesures de perf Kong rejouées avec `deploy.resources` et vérification `check-limits.sh` ; (2) générateur k6 saturant pendant l'allocation de VU → 600 VU pré-alloués ; (3) bruit de l'hôte (MacBook Air, refroidissement passif) → runs avec `dropped_iterations` rejoués, médiane de 3 runs.
+**Quand Kong resterait pertinent.** Kong OSS reste solide sur le routage, le failover et surtout l'observabilité prête à l'emploi : la latence gateway et la latence backend sont visibles dans chaque réponse. Il conviendrait à un contexte où la résilience est portée ailleurs, par exemple un service mesh. Deux réserves s'appliqueraient :
+- ajouter **systématiquement** un health check actif sur chaque upstream ;
+- tenir compte du gel de la lignée OSS à la 3.9.x : OIDC/JWKS et les quotas avancés sont en édition payante.
+
+## Compromis assumés
+
+- **APISIX valide les tokens un peu plus lentement** (+0,5 ms en médiane), c'est le prix du JWKS. C'est négligeable devant le gain de sécurité opérationnelle.
+- **APISIX a été plus délicat à démarrer** (incident de configuration au premier lancement). Il demande un peu plus de maîtrise de la configuration.
+
+## Limites de validité
+
+- **Mesures sur un poste de développement** (MacBook Air sous Docker Desktop), sans TLS, avec une seule instance de gateway : les résultats valent **en relatif**, pas comme dimensionnement de production.
+- **Incidents de protocole détectés et corrigés en cours de route :**
+  1. la limite CPU était ignorée par Docker Desktop macOS : mesures de performance rejouées avec `deploy.resources`, puis vérifiées ;
+  2. le générateur k6 saturait en allouant ses utilisateurs virtuels : 600 pré-alloués ;
+  3. bruit de l'hôte : runs avec requêtes perdues rejoués, médiane de 3 runs ;
+  4. un bug du script de latence sur la route protégée, corrigé.
+- **Écart de configuration non neutralisé :** Kong avait davantage de métriques Prometheus actives qu'APISIX. Une partie de l'écart de CPU peut en venir.
+- **Expériences non réalisées :** déploiement à chaud (E8), capture Prometheus (E6, partielle), scénarios backend lent et arrêt complet de orders, haute disponibilité et Kubernetes.
 
 ## Prochaines étapes
 
-1. Rejouer E3 et E5 sur un cluster Kubernetes de test avec 2 instances de la gateway retenue.
-2. Activer le tracing OpenTelemetry de bout en bout.
-3. Mettre la configuration de la gateway sous pipeline GitOps (revue, validation, déploiement).
+1. Rejouer E3 et E5 sur un cluster Kubernetes de test, avec 2 instances d'APISIX et le rate limiting sur Redis.
+2. Mesurer E8 (changement de route sans interruption) et activer le tracing OpenTelemetry de bout en bout.
+3. Optionnel : rejouer Kong avec un health check actif sur `orders` et des métriques allégées, pour quantifier ce qui relève de la configuration et ce qui relève du produit.

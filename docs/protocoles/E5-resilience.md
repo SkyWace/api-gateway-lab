@@ -56,4 +56,4 @@ Le plugin `api-breaker` ouvre le circuit après 3 échecs, laisse passer quelque
 
 ![Failover](../graphs/07-failover-catalogue.png)
 
-**Décision** — *à compléter*. Question du sujet : *comment une erreur backend se répercute-t-elle sur le client ?*
+**Décision** — Critère décisif. Failover identique, mais face à un backend en erreur, **APISIX protège le client et se rétablit seul**, alors que **Kong OSS transforme une panne de 30 s en coupure durable** faute de circuit breaker et de health check actif. Réponse à la question du sujet : sans circuit breaker, une erreur backend se propage au client, voire s'amplifie.

@@ -35,4 +35,4 @@
 
 ![Rate limiting Kong vs APISIX](../graphs/05-rate-limiting.png)
 
-**Décision** — *à compléter* (précision vs dépendance à Redis ; impact en HA).
+**Décision** — APISIX tient le quota exactement, Kong le dépasse légèrement en rafale. Les deux comptent localement : en production à plusieurs instances, il faut un stockage partagé (Redis) quel que soit le choix.

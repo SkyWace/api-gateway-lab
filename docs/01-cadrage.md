@@ -78,4 +78,6 @@ Un critère éliminatoire écarte la solution **quel que soit son score global**
 | Traefik Proxy | v3.3 | OSS (MIT) | File provider | Reverse proxy cloud-native avec middlewares |
 | Spring Cloud Gateway | 4.2 (Spring Cloud 2024.0.1, Boot 3.4.5) | Open source (Apache 2.0) | Application Java packagée | Gateway applicative (écosystème Java de l'équipe) |
 
+> **Périmètre effectivement mesuré :** Kong et APISIX. Traefik et Spring Cloud Gateway ont été configurés mais pas mesurés (réduction de périmètre en cours de lab ; le sujet impose au moins deux solutions).
+
 Toutes les fonctionnalités utilisées appartiennent à l'édition **gratuite**. Quand une fonctionnalité n'existe qu'en édition payante, elle est **signalée et non utilisée** (voir `02-architecture.md` § 2.5).

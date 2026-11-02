@@ -1,5 +1,7 @@
 # E8 — Changement de route sans interruption
 
+> **Statut : non réalisée** (périmètre réduit, faute de temps). Protocole et script `scripts/reload.sh` prêts pour une suite.
+
 **Objectif** — Ajouter une route `/api/v2/catalog` pendant un trafic continu, mesurer le délai de prise en compte et vérifier l'absence d'erreurs.
 
 **Hypothèse**

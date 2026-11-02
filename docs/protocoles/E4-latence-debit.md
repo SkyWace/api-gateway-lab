@@ -144,4 +144,4 @@ Lecture : 0 erreur et ≈ 100 % servi à tous les paliers → **Kong soutient 3 
 
 **Limites de validité** — Docker sur un poste de dev ≠ production ; k6 partage le CPU de l'hôte ; pas de TLS ; résultats à relire en *relatif* entre solutions, pas en absolu.
 
-**Décision** — *à compléter*.
+**Décision** — Les deux respectent largement les seuils (S3 : +10 ms ; S4 : 1 500 req/s). APISIX garde une marge importante sous charge (CPU 53 %, P95 1,6 ms à 3 000 req/s) quand Kong approche de la saturation (CPU 97 %, P95 36 ms). Avantage APISIX, avec la réserve de la configuration de métriques plus chargée côté Kong.

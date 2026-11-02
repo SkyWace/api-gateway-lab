@@ -25,4 +25,4 @@
 | En-têtes divulgués | `Server`/`Via: kong/3.9.1`, `X-Kong-*` (latences, request-id) → `KONG_HEADERS=off` en prod | `Server: APISIX/3.11.0` ; détail des erreurs JWT dans `WWW-Authenticate` | | |
 | TLS / ACME | | | | |
 
-**Décision** — *à compléter*.
+**Décision** — Les deux rejettent proprement les requêtes malformées et le path traversal. Les deux divulguent leur version (`Server`) : à masquer. APISIX est plus strict sur CORS mais trop bavard sur les erreurs JWT.
