@@ -27,7 +27,7 @@
 | kill-catalog2 : erreurs (nb, %) | 0 / 2 400 (0 %) | | | |
 | kill-catalog2 : réintégration (s) | ≈ 5 (hors rotation ≈ 35 s pour 31 s d'arrêt) | | | |
 | slow-orders : code / durée max | | | | |
-| errors-orders : circuit ouvert ? code client | « oui » de fait : 503 après 3 échecs… **et ne se referme jamais** (2 × 200, 3 × 500, puis 2 396 × 503) | | | |
+| errors-orders : circuit ouvert ? code client | « oui » de fait : 503 après 3 échecs… **et ne se referme jamais** (2 × 200, 3 × 500, puis 2 396 × 503) | oui : 503 rapides pendant la panne, **refermé ≈ 10 s après la fin** ; 24 × 500 + 563 × 503 sur 2 400 (24 %) | | |
 | kill-orders : code client | | | | |
 
 **Observations Kong — kill-catalog2 (02/11, `results/kong-kill-catalog2.log`, `results/chaos-events.log`)**
@@ -38,5 +38,18 @@ Injection de 50 % d'erreurs 500 sur orders (seule instance) à 13:46:27, pendant
 Résultat : 2 réponses 200, **3 réponses 500**, puis **2 396 réponses 503** générées par Kong (aucune n'atteint le backend : `instance:none`).
 Explication : le **health check passif** de l'upstream `orders` (`http_failures: 3`) a marqué l'unique cible « unhealthy » après 3 erreurs → Kong répond 503 (*failure to get a peer from the ring-balancer*). Cela joue le rôle d'un circuit breaker… mais **sans demi-ouverture** : sans health check *actif* sur cet upstream, un passif ne remet jamais une cible en service. La panne réelle a duré 30 s, l'indisponibilité vue par le client a duré **tout le reste du test** (et jusqu'au redémarrage de Kong).
 Conséquence pour la décision : avec Kong OSS, tout upstream doit avoir un health check **actif** en plus du passif, sinon une rafale d'erreurs courte provoque une coupure durable. À comparer au circuit breaker d'APISIX (`api-breaker`, réouverture progressive) et de Traefik/SCG.
+
+**Observations APISIX — errors-orders (02/11, `results/apisix-errors-orders.log`)**
+50 % d'erreurs 500 injectées de 14:19:25 à 14:19:55. Chronologie par tranches de 10 s (`scripts/timeline.sh`) :
+
+| Tranche (s) | 200 | 500 (backend) | 503 (circuit ouvert) |
+|---|---|---|---|
+| 0–10 (début de panne) | 75 | 6 | 119 |
+| 10–20 | 4 | 5 | 191 |
+| 20–30 | 8 | 9 | 183 |
+| 30–40 (fin de panne) | 126 | 4 | 70 |
+| 40–120 | 1 599 | 0 | 0 |
+
+Le plugin `api-breaker` ouvre le circuit après 3 échecs, laisse passer quelques requêtes de test (les 200/500 isolés pendant la panne = demi-ouverture), puis **se referme moins de 10 s après le retour du backend**. Erreurs vues par le client : 24 % du run, toutes concentrées dans la fenêtre de panne. Comparaison Kong (même scénario) : 99,9 % d'erreurs, **aucune récupération**.
 
 **Décision** — *à compléter*. Question du sujet : *comment une erreur backend se répercute-t-elle sur le client ?*
