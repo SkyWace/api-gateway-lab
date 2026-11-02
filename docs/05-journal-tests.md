@@ -32,3 +32,4 @@ Une ligne par exécution, y compris les runs ratés (ils font partie de la déma
 | 02/11 ~09:54 | E4 | kong | `latency.js` (rejeu) | `results/kong-latency-2.log` | P50 1,57 / P95 4,06 / P99 19,6 ms | 0 dropped |
 | 02/11 ~09:56 | E4 | kong | `latency.js` (rejeu) | `results/kong-latency-3.log` | P50 1,83 / P95 3,65 / P99 5,61 ms | 0 dropped |
 | 02/11 09:57 | E4 | kong | `latency.js ENDPOINT=orders` | — | échec setup() | Cause : bug du script (discardResponseBodies vidait la réponse token) → corrigé |
+| 02/11 ~10:03 | E4 | kong | `throughput.js` (300→3000 req/s) | `results/kong-throughput.log` | 253 315 req, 0 % erreur, moy. 1 447 req/s ; 12 425 dropped ; P95 global 91,8 ms, P99 518 ms | Résumé non ventilé par palier → script amélioré, run à refaire |
