@@ -39,3 +39,4 @@ Une ligne par exécution, y compris les runs ratés (ils font partie de la déma
 | 02/11 ~10:25 | E5 | kong | `loadbalancing.js` (1 000 req) | `results/kong-lb.log` | catalog-1 : 500 / catalog-2 : 500 | Round-robin exact |
 | 02/11 11:08 | — | kong | `docker inspect` | — | NanoCpus = 0, Memory = 512 Mo | **Limite CPU non appliquée** depuis le début → compose corrigé (`deploy.resources`), perf Kong à rejouer |
 | 02/11 ~11:35 | E4 | kong | `latency.js` ×3 + orders, **limite 1 vCPU vérifiée** | `results/kong-latency-{1,2,3,orders}.log` | P50 1,62 / P95 3,70 / P99 6,95 ms ; orders P95 3,58 ms ; 0 dropped | Remplace les mesures sans limite CPU |
+| 02/11 ~13:30 | E4 | kong | `throughput.js` + `stats.sh`, **limite 1 vCPU vérifiée** | `results/kong-throughput.log` | 100 % servi à tous les paliers, 0 erreur ; P95 36 ms à 3 000 req/s ; CPU 97 %, RAM ~205 Mo | Run retenu. Saturation proche (CPU plafonné, P99 > 100 ms dès 1 500) |

@@ -29,9 +29,9 @@
 | P99 catalog (ms) | 4,61 | 6,95 | | | |
 | Surcoût P95 catalog (ms) | — | +1,60 (P50 +0,85 ; P99 +2,34) | | | |
 | P95 orders avec JWT (ms) | — | 3,58 (P50 1,61) | | | |
-| RPS max soutenu | — | à rejouer avec limite CPU | | | |
-| CPU au palier max (%) | — | à rejouer | | | |
-| RAM max (Mo) | — | à rejouer (~206 sans limite CPU) | | | |
+| RPS max soutenu | — | ≥ 3 000 sans erreur (CPU ~100 %, P95 36 ms) | | | |
+| CPU au palier max (%) | — | 97 (limite 100) | | | |
+| RAM max (Mo) | — | ~205 / 512 | | | |
 
 > ⚠️ **Incident de protocole (02/11, 11:08)** — `docker inspect` a montré `NanoCpus=0` : sur Docker Desktop macOS, la clé `cpus:` au niveau service était **ignorée**. Les mesures Kong ci-dessous (latence et débit) ont donc été faites **sans limite CPU** (seule la limite RAM de 512 Mo était active). Correctif : limites passées en `deploy.resources.limits` + script `scripts/check-limits.sh`. Les mesures de perf Kong sont **rejouées** avec la limite ; les anciennes sont conservées pour trace mais exclues de la comparaison.
 
@@ -76,6 +76,22 @@ Lecture : runs très reproductibles (écart P95 < 0,05 ms). Médiane catalog : P
 | 3 000 | 103 125 | 103 140 | 100 % | 18,66 | 45,4 | 0 % |
 
 Lecture : la dégradation n'est **pas monotone** (2 250 pire que 3 000). Les itérations perdues (5 755) coïncident avec la phase où k6 **alloue de nouveaux VU** (200 pré-alloués → 508) : artefact du générateur, pas saturation de Kong. Au palier 3 000, tout est servi avec P95 = 18,7 ms et 0 erreur → **Kong tient ≥ 3 000 req/s avec 1 vCPU / 1 worker** (critère S4 validé). Correctif pour la suite : `preAllocatedVUs` porté à 600 (Kong rejoué avec ce réglage pour garder la comparaison équitable).
+
+**Débit Kong — RUN RETENU, limite 1 vCPU vérifiée (`results/kong-throughput.log`, `results/kong-stats-*.csv` le plus récent)**
+
+| Palier visé | Attendues | Servies | % servi | P50 (ms) | P95 (ms) | P99 (ms) | Erreurs |
+|---|---|---|---|---|---|---|---|
+| 300 | 10 000 | 9 998 | 100 % | 1,26 | 2,64 | 9,6 | 0 % |
+| 750 | 25 125 | 25 124 | 100 % | 0,49 | 1,34 | 5,7 | 0 % |
+| 1 500 | 50 625 | 50 627 | 100 % | 0,52 | 14,26 | 117,5 | 0 % |
+| 2 250 | 76 875 | 76 876 | 100 % | 0,43 | 31,20 | 134,9 | 0 % |
+| 3 000 | 103 125 | 103 112 | 100 % | 0,61 | 36,39 | 97,5 | 0 % |
+
+0 itération perdue, 0 erreur. Pic conteneur : **97 % CPU** (plafonné par la limite), **~205 Mo RAM**.
+
+Lecture : Kong sert **3 000 req/s sans erreur sur 1 vCPU**, mais il est **proche de la saturation** : CPU à ~100 % et queue de latence qui se dégrade dès 1 500 req/s (P95 1,3 → 14 ms, P99 > 100 ms). La médiane reste < 1 ms : la majorité des requêtes n'est pas affectée, ce sont les files d'attente du worker unique qui allongent la queue. Critère S4 (≥ 1 500 req/s sans erreur) **validé**.
+
+*Runs ci-dessous : historique sans limite CPU, exclus de la comparaison.*
 
 **Débit Kong — run retenu (run 3, `preAllocatedVUs: 600`, `results/kong-throughput.log`)**
 
