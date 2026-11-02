@@ -24,10 +24,13 @@
 | | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|
 | Répartition catalog-1 / catalog-2 | 500 / 500 (round-robin exact) | | | |
-| kill-catalog2 : erreurs (nb, %) | | | | |
-| kill-catalog2 : réintégration (s) | | | | |
+| kill-catalog2 : erreurs (nb, %) | 0 / 2 400 (0 %) | | | |
+| kill-catalog2 : réintégration (s) | ≈ 5 (hors rotation ≈ 35 s pour 31 s d'arrêt) | | | |
 | slow-orders : code / durée max | | | | |
 | errors-orders : circuit ouvert ? code client | | | | |
 | kill-orders : code client | | | | |
+
+**Observations Kong — kill-catalog2 (02/11, `results/kong-kill-catalog2.log`, `results/chaos-events.log`)**
+Arrêt de catalog-2 de 13:41:51 à 13:42:22 (31 s) sous 20 req/s pendant 120 s. Résultat : 2 400 réponses **toutes en 200**, P95 7,7 ms, max 159 ms. Répartition : catalog-1 = 1 555, catalog-2 = 845. En régime normal catalog-2 aurait reçu ≈ 1 200 requêtes ; il en manque 355, soit ≈ 35,5 s hors rotation → ≈ 31 s d'arrêt + ≈ 5 s pour être réintégré (intervalle du health check actif). Les requêtes tombées sur catalog-2 au moment de l'arrêt ont été **rejouées sur catalog-1** (retries = 2) : aucun impact visible côté client.
 
 **Décision** — *à compléter*. Question du sujet : *comment une erreur backend se répercute-t-elle sur le client ?*
