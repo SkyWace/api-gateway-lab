@@ -29,7 +29,7 @@ export const options = {
       executor: 'ramping-arrival-rate',
       startRate: 100,
       timeUnit: '1s',
-      preAllocatedVUs: 200,
+      preAllocatedVUs: 600,   // VU créés d'avance : sinon k6 perd des itérations en en allouant pendant le test
       maxVUs: 1000,
       stages: TARGETS.flatMap((t) => [
         { target: t, duration: `${RAMP}s` },   // montée

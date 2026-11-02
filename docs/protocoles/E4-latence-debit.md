@@ -29,7 +29,7 @@
 | P99 catalog (ms) | 4,61 | 5,65 | | | |
 | Surcoût P95 catalog (ms) | — | +1,55 (P50 +0,80) | | | |
 | P95 orders avec JWT (ms) | | | | | |
-| RPS max soutenu | | | | | |
+| RPS max soutenu | — | ≥ 3 000 (0 erreur) | | | |
 | CPU au palier max (%) | | | | | |
 | RAM max (Mo) | | | | | |
 
@@ -49,6 +49,18 @@
 > Règle de validité adoptée : un run avec `dropped_iterations` > 0 signale que **le générateur (k6) ou l'hôte** a saturé, pas forcément la gateway. Ces runs sont rejoués machine au repos ; s'ils restent bruités, ils sont conservés et signalés. Machine : MacBook Air (refroidissement passif → bridage thermique possible sous charge prolongée, d'où une pause de 1–2 min entre runs).
 >
 > Lecture provisoire Kong : la **médiane** est stable (+0,8 à +1 ms vs direct) ; les écarts portent sur la **queue** (P95/P99), sensible au bruit de l'hôte.
+
+**Débit Kong par palier (run 2, `results/kong-throughput.log`)** — fenêtre de 35 s = montée 5 s + palier 30 s
+
+| Palier visé | Requêtes attendues | Servies | % servi | P95 (ms) | P99 (ms) | Erreurs |
+|---|---|---|---|---|---|---|
+| 300 | 10 000 | 9 998 | 100 % | 2,55 | 5,6 | 0 % |
+| 750 | 25 125 | 25 119 | 100 % | 1,44 | 5,5 | 0 % |
+| 1 500 | 50 625 | 49 074 | 96,9 % | 2,46 | 35,5 | 0 % |
+| 2 250 | 76 875 | 72 658 | 94,5 % | 103,75 | 451,9 | 0 % |
+| 3 000 | 103 125 | 103 140 | 100 % | 18,66 | 45,4 | 0 % |
+
+Lecture : la dégradation n'est **pas monotone** (2 250 pire que 3 000). Les itérations perdues (5 755) coïncident avec la phase où k6 **alloue de nouveaux VU** (200 pré-alloués → 508) : artefact du générateur, pas saturation de Kong. Au palier 3 000, tout est servi avec P95 = 18,7 ms et 0 erreur → **Kong tient ≥ 3 000 req/s avec 1 vCPU / 1 worker** (critère S4 validé). Correctif pour la suite : `preAllocatedVUs` porté à 600 (Kong rejoué avec ce réglage pour garder la comparaison équitable).
 
 **Limites de validité** — Docker sur un poste de dev ≠ production ; k6 partage le CPU de l'hôte ; pas de TLS ; résultats à relire en *relatif* entre solutions, pas en absolu.
 
