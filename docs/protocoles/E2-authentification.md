@@ -29,15 +29,15 @@
 
 | Cas | Attendu | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|---|
-| catalog public sans token | 200 | 200 | | | |
-| orders sans token | 401 | 401 | | | |
-| orders token valide | 200 | 200 | | | |
-| token malformé | 401 | 401 | | | |
-| signature altérée | 401 | 401 | | | |
-| payload modifié (sub) | 401 | 401 | | | |
-| exp modifié | 401 | 401 | | | |
-| alg=none | 401 | 401 | | | |
-| schéma Basic | 401 | 401 | | | |
+| catalog public sans token | 200 | 200 | 200 | | |
+| orders sans token | 401 | 401 | 401 | | |
+| orders token valide | 200 | 200 | 200 | | |
+| token malformé | 401 | 401 | 401 | | |
+| signature altérée | 401 | 401 | 401 | | |
+| payload modifié (sub) | 401 | 401 | 401 | | |
+| exp modifié | 401 | 401 | 401 | | |
+| alg=none | 401 | 401 | 401 | | |
+| schéma Basic | 401 | 401 | 401 | | |
 | Rotation de clé | accepté sans reconfig | | | | |
 | Token réellement expiré | 401 | | | | |
 

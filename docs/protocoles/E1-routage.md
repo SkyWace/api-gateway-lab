@@ -18,9 +18,9 @@
 
 | | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|
-| Cas OK / 5 | 5/5 | | | |
+| Cas OK / 5 | 5/5 | 5/5 | | |
 | Lignes de config utiles | 91 (dont ~8 de clé PEM) | 78 | 88 | 166 (YAML + Java) |
-| Concepts à maîtriser | route, upstream, plugin, global_rule (+ config.yaml de déploiement) | | | |
-| Remarques | `uris` avec `/*` explicite ; fichier `apisix.yaml` doit finir par `#END` ; démarrage raté au 1er essai (cf. journal) | | | |
+| Concepts à maîtriser | service, route, upstream/target, plugin, consumer | route, upstream, plugin, global_rule (+ config.yaml de déploiement) | | |
+| Remarques | `strip_path: false` obligatoire ; 404 gateway = `no Route matched` | `uris` avec `/*` explicite ; `apisix.yaml` doit finir par `#END` ; démarrage raté au 1er essai (cf. journal) | | |
 
 **Décision** — *à compléter* (ex. : simplicité de lecture vs richesse d'expression).

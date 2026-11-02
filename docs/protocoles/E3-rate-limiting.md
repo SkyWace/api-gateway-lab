@@ -23,10 +23,10 @@
 | | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|
 | Algorithme | fenêtre fixe | fenêtre fixe | token bucket | token bucket |
-| greedy : accepté/s (écart au quota) | 10,00/s (0 %) ; 601 refus = 67 % | | | |
-| polite : nb de 429 | 0 (151/151 acceptées) | | | |
-| burst : acceptées par rafale | 10,0 exactement (150 / 15 rafales) | | | |
-| En-têtes `RateLimit-*` / `X-RateLimit-*` | `X-RateLimit-Limit/Remaining/Reset` uniquement | | | |
+| greedy : accepté/s (écart au quota) | 10,27/s (+2,7 %) ; 593 refus = 66 % | 10,00/s (0 %) ; 601 refus = 67 % | | |
+| polite : nb de 429 | 0 (150/150 acceptées) | 0 (151/151 acceptées) | | |
+| burst : acceptées par rafale | 11,4 en moyenne (182 acceptées / 16 rafales) | 10,0 exactement (150 / 15 rafales) | | |
+| En-têtes `RateLimit-*` / `X-RateLimit-*` | oui, les deux formats (`RateLimit-Limit/Remaining/Reset` + `X-RateLimit-*-Second`) | `X-RateLimit-Limit/Remaining/Reset` uniquement | | |
 | Compteur partagé entre instances | non (local) | non (local) | non (local) | oui (Redis) |
 
 **Observations Kong (02/11/2026, `results/kong-ratelimit.log`)** — Quota tenu à +2,7 % près et isolation parfaite entre clients. En rafale, la moyenne de 11,4 acceptées (> 10) illustre l'effet **fenêtre fixe** : une rafale à cheval sur deux secondes consomme deux fenêtres (jusqu'à 20 requêtes passent). À comparer avec le token bucket de Traefik/SCG.
