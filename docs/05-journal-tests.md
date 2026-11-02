@@ -47,3 +47,4 @@ Une ligne par exécution, y compris les runs ratés (ils font partie de la déma
 | 02/11 ~14:00 | E2 | apisix | `auth.js` | `results/apisix-auth.log` | 9/9 conformes | Messages d'erreur JWT très détaillés |
 | 02/11 ~14:01 | E3 | apisix | `ratelimit.js` | `results/apisix-ratelimit.log` | greedy 10,00/s, polite 0 refus, burst 10/rafale | Quota exact |
 | 02/11 ~14:02 | E5 | apisix | `loadbalancing.js` | `results/apisix-lb.log` | 500 / 500 | |
+| 02/11 ~14:12 | E4 | apisix | `throughput.js` + `stats.sh` | `results/apisix-throughput.log` | ≈ 100 % servi, 0 erreur ; P95 1,6 ms à 3 000 req/s ; CPU 53 %, RAM 52 Mo | |

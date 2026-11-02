@@ -29,9 +29,9 @@
 | P99 catalog (ms) | 4,61 | 6,95 | | | |
 | Surcoût P95 catalog (ms) | — | +1,60 (P50 +0,85 ; P99 +2,34) | | | |
 | P95 orders avec JWT (ms) | — | 3,58 (P50 1,61) | | | |
-| RPS max soutenu | — | ≥ 3 000 sans erreur (CPU ~100 %, P95 36 ms) | | | |
-| CPU au palier max (%) | — | 97 (limite 100) | | | |
-| RAM max (Mo) | — | ~205 / 512 | | | |
+| RPS max soutenu | — | ≥ 3 000 sans erreur (CPU ~100 %, P95 36 ms) | ≥ 3 000 sans erreur (CPU ~53 %, P95 1,6 ms) | | |
+| CPU au palier max (%) | — | 97 (limite 100) | 53 | | |
+| RAM max (Mo) | — | ~205 / 512 | ~52 / 512 | | |
 
 > ⚠️ **Incident de protocole (02/11, 11:08)** — `docker inspect` a montré `NanoCpus=0` : sur Docker Desktop macOS, la clé `cpus:` au niveau service était **ignorée**. Les mesures Kong ci-dessous (latence et débit) ont donc été faites **sans limite CPU** (seule la limite RAM de 512 Mo était active). Correctif : limites passées en `deploy.resources.limits` + script `scripts/check-limits.sh`. Les mesures de perf Kong sont **rejouées** avec la limite ; les anciennes sont conservées pour trace mais exclues de la comparaison.
 
@@ -76,6 +76,20 @@ Lecture : runs très reproductibles (écart P95 < 0,05 ms). Médiane catalog : P
 | 3 000 | 103 125 | 103 140 | 100 % | 18,66 | 45,4 | 0 % |
 
 Lecture : la dégradation n'est **pas monotone** (2 250 pire que 3 000). Les itérations perdues (5 755) coïncident avec la phase où k6 **alloue de nouveaux VU** (200 pré-alloués → 508) : artefact du générateur, pas saturation de Kong. Au palier 3 000, tout est servi avec P95 = 18,7 ms et 0 erreur → **Kong tient ≥ 3 000 req/s avec 1 vCPU / 1 worker** (critère S4 validé). Correctif pour la suite : `preAllocatedVUs` porté à 600 (Kong rejoué avec ce réglage pour garder la comparaison équitable).
+
+**Débit APISIX — run retenu, limite 1 vCPU vérifiée (`results/apisix-throughput.log`)**
+
+| Palier visé | Attendues | Servies | % servi | P50 (ms) | P95 (ms) | P99 (ms) | Erreurs |
+|---|---|---|---|---|---|---|---|
+| 300 | 10 000 | 9 996 | 100 % | 0,95 | 2,63 | 112,7 | 0 % |
+| 750 | 25 125 | 25 031 | 99,6 % | 0,37 | 0,92 | 3,5 | 0 % |
+| 1 500 | 50 625 | 50 713 | 100 % | 0,29 | 0,81 | 5,6 | 0 % |
+| 2 250 | 76 875 | 76 867 | 100 % | 0,28 | 0,87 | 4,4 | 0 % |
+| 3 000 | 103 125 | 103 113 | 100 % | 0,27 | 1,61 | 10,5 | 0 % |
+
+Pic conteneur : **~53 % CPU**, **~52 Mo RAM** / 512.
+
+Lecture : APISIX sert 3 000 req/s avec une **marge importante** (CPU à moitié, P95 1,6 ms), là où Kong était à 97 % CPU et P95 36 ms sur le même palier. Écart à nuancer : Kong a ici davantage de métriques Prometheus actives (`latency_metrics`, `bandwidth_metrics`, `upstream_health_metrics`) et le plugin `correlation-id` ; une partie de l'écart de CPU peut venir de là (test complémentaire possible : Kong sans ces métriques). Le P99 élevé du palier 300 (premières secondes) est un effet de démarrage, pas de charge.
 
 **Débit Kong — RUN RETENU, limite 1 vCPU vérifiée (`results/kong-throughput.log`, `results/kong-stats-*.csv` le plus récent)**
 
