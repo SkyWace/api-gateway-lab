@@ -11,6 +11,7 @@ POC reproductible comparant **Kong Gateway OSS**, **Apache APISIX**, **Traefik P
 | [docs/04-note-decision.md](docs/04-note-decision.md) | Note de décision (brouillon à compléter avec les mesures) |
 | [docs/05-journal-tests.md](docs/05-journal-tests.md) | Journal des exécutions |
 | [docs/graphs/](docs/graphs/README.md) | Graphiques générés depuis `results/` (`python3 scripts/graphs.py`) |
+| [docs/presentation/](docs/presentation/Comparatif-API-Gateways.pdf) | Support d’oral (PDF, 13 slides) |
 
 ## Prérequis
 
