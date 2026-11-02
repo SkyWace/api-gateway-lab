@@ -22,7 +22,7 @@ Une ligne par exécution, y compris les runs ratés (ils font partie de la déma
 | 02/11 09:34 | E3 | kong | `ratelimit.js` (30 s) | `results/kong-ratelimit.log` | greedy 10,27/s, polite 0 refus, burst 11,4/rafale | |
 | 02/11 09:35 | E4 | direct | `latency.js` 200 req/s 60 s | `results/direct-latency-1.log` | P50 0,77 / P95 2,10 / P99 4,61 ms, 0 % erreur | Run 1/3 |
 | | | | | | | |
-| 02/11 ~09:40 | E4 | direct | `latency.js` | `results/direct-latency-2.log` | P50 0,80 / P95 2,16 / P99 5,22 ms | Run 2/3 ; run 3 à refaire (commentaire `#` collé dans zsh) |
+| 02/11 ~09:40 | E4 | direct | `latency.js` | `results/direct-latency-2.log` | P50 0,75 / P95 2,20 / P99 5,18 ms (valeurs du fichier ; un run à 0,80 ms relevé à l'écran n'a pas été conservé) | Run 2/3 ; run 3 à refaire (commentaire `#` collé dans zsh) |
 | 02/11 ~09:42 | E4 | kong | `latency.js DURATION=30s` | — | P95 3,39 ms | Échauffement, jeté |
 | 02/11 ~09:43 | E4 | kong | `latency.js` | `results/kong-latency-1.log` | P50 1,55 / P95 3,55 / P99 5,65 ms | Propre |
 | 02/11 ~09:45 | E4 | kong | `latency.js` | `results/kong-latency-2.log` | P50 1,63 / P95 15,48 / P99 120 ms | 118 dropped_iterations → hôte saturé, à rejouer |

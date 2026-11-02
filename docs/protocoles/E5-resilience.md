@@ -52,4 +52,8 @@ Conséquence pour la décision : avec Kong OSS, tout upstream doit avoir un heal
 
 Le plugin `api-breaker` ouvre le circuit après 3 échecs, laisse passer quelques requêtes de test (les 200/500 isolés pendant la panne = demi-ouverture), puis **se referme moins de 10 s après le retour du backend**. Erreurs vues par le client : 24 % du run, toutes concentrées dans la fenêtre de panne. Comparaison Kong (même scénario) : 99,9 % d'erreurs, **aucune récupération**.
 
+![Circuit breaker](../graphs/06-circuit-breaker.png)
+
+![Failover](../graphs/07-failover-catalogue.png)
+
 **Décision** — *à compléter*. Question du sujet : *comment une erreur backend se répercute-t-elle sur le client ?*

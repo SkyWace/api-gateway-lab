@@ -177,7 +177,7 @@ def chart_throughput():
     ax.set_xticks(sorted(next(iter(data.values()))))
     ax.set_title("Montée en charge : latence P95 par palier")
     ax.legend(loc="upper left")
-    fig.text(0.01, -0.02, "0 erreur à tous les paliers pour toutes les gateways. 1 vCPU / 512 Mo. Source : results/*-throughput.log",
+    fig.text(0.01, -0.06, "0 erreur à tous les paliers pour toutes les gateways. 1 vCPU / 512 Mo. Source : results/*-throughput.log",
              fontsize=8, color=INK2)
     save(fig, "03-debit-p95-paliers.png", "Latence P95 par palier de charge")
 
@@ -214,12 +214,14 @@ def chart_resources():
         a1.plot(t, [r[1] for r in rows], color=COLOR[g], lw=2, label=LABEL[g])
         a2.plot(t, [r[2] for r in rows], color=COLOR[g], lw=2, label=LABEL[g])
     a1.axhline(100, color=INK2, lw=1, ls="--")
-    a1.annotate("limite 1 vCPU", (0, 100), xytext=(2, 3), textcoords="offset points", fontsize=8, color=INK2)
+    a1.annotate("limite 1 vCPU", (1, 100), xycoords=("axes fraction", "data"), xytext=(-2, 3),
+                textcoords="offset points", ha="right", fontsize=8, color=INK2)
     a2.axhline(512, color=INK2, lw=1, ls="--")
-    a2.annotate("limite 512 Mo", (0, 512), xytext=(2, -11), textcoords="offset points", fontsize=8, color=INK2)
+    a2.annotate("limite 512 Mo", (1, 512), xycoords=("axes fraction", "data"), xytext=(-2, -11),
+                textcoords="offset points", ha="right", fontsize=8, color=INK2)
     a1.set(title="CPU pendant la montée en charge", xlabel="Temps (s)", ylabel="CPU (%)", ylim=(0, 125))
     a2.set(title="Mémoire pendant la montée en charge", xlabel="Temps (s)", ylabel="RAM (Mo)", ylim=(0, 560))
-    a1.legend(loc="upper left")
+    a2.legend(loc="center right")
     fig.text(0.01, -0.03, "docker stats échantillonné en continu (≈ toutes les 2-3 s) pendant throughput.js. Source : results/<gw>-stats-*.csv (le plus récent)",
              fontsize=8, color=INK2)
     fig.tight_layout()
@@ -336,7 +338,7 @@ def chart_status_timeline(scenario, endpoint_title, ev_start, ev_end, fname, tit
             ax.axvspan(w[0], w[1] if w[1] else w[0] + 30, color=INK2, alpha=0.10, lw=0, zorder=0)
             ax.annotate("panne injectée", (w[0], ax.get_ylim()[1]), xytext=(3, 3), annotation_clip=False, textcoords="offset points",
                         fontsize=8, color=INK2)
-        ax.set_title(LABEL[g], loc="left", fontsize=11)
+        ax.set_title(LABEL[g], loc="left", fontsize=11, pad=16)
         ax.set_ylabel("Réponses / 5 s")
         ax.grid(axis="x", visible=False)
     axes[0, 0].legend(loc="lower right", bbox_to_anchor=(1, 1.02), ncol=3, fontsize=8)
@@ -369,7 +371,7 @@ def chart_failover():
             ax.axvspan(w[0], w[1] if w[1] else w[0] + 31, color=INK2, alpha=0.10, lw=0, zorder=0)
             ax.annotate("catalog-2 arrêté", (w[0], ax.get_ylim()[1]), xytext=(3, 3), annotation_clip=False, textcoords="offset points",
                         fontsize=8, color=INK2)
-        ax.set_title(LABEL[g], loc="left", fontsize=11)
+        ax.set_title(LABEL[g], loc="left", fontsize=11, pad=16)
         ax.set_ylabel("Réponses / 5 s")
         ax.grid(axis="x", visible=False)
     axes[0, 0].legend(loc="lower right", bbox_to_anchor=(1, 1.02), ncol=3, fontsize=8)

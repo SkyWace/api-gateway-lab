@@ -33,4 +33,6 @@
 
 **Observations APISIX (02/11, `results/apisix-ratelimit.log`)** — Quota tenu **exactement** (300 acceptées en 30 s) et exactement 10 par rafale, là où Kong en laissait passer 11,4. Les deux sont annoncés « fenêtre fixe », mais la fenêtre de Kong est calée sur l'horloge (une rafale à cheval sur deux secondes consomme deux fenêtres), alors que le compteur d'APISIX démarre vraisemblablement à la première requête de la clé (compteur avec expiration) : une rafale ne chevauche pas deux fenêtres. Hypothèse à vérifier dans la doc / le code du plugin `limit-count`.
 
+![Rate limiting Kong vs APISIX](../graphs/05-rate-limiting.png)
+
 **Décision** — *à compléter* (précision vs dépendance à Redis ; impact en HA).

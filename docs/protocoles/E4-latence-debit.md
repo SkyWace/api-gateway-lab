@@ -24,10 +24,10 @@
 
 | | Direct | Kong | APISIX | Traefik | SCG |
 |---|---|---|---|---|---|
-| P50 catalog (ms) | 0,77 | 1,62 | 1,51 | | |
+| P50 catalog (ms) | 0,75 | 1,62 | 1,51 | | |
 | P95 catalog (ms) | 2,10 | 3,70 | 2,68 | | |
 | P99 catalog (ms) | 4,61 | 6,95 | 5,38 | | |
-| Surcoût P95 catalog (ms) | — | +1,60 (P50 +0,85 ; P99 +2,34) | +0,58 (P50 +0,74 ; P99 +0,77) | | |
+| Surcoût P95 catalog (ms) | — | +1,60 (P50 +0,87 ; P99 +2,34) | +0,58 (P50 +0,76 ; P99 +0,77) | | |
 | P95 orders avec JWT (ms) | — | 3,58 (P50 1,61) | 3,67 (P50 2,04) | | |
 | RPS max soutenu | — | ≥ 3 000 sans erreur (CPU ~100 %, P95 36 ms) | ≥ 3 000 sans erreur (CPU ~53 %, P95 1,6 ms) | | |
 | CPU au palier max (%) | — | 97 (limite 100) | 53 | | |
@@ -64,7 +64,7 @@ Lecture : médiane catalog P50 1,51 / P95 2,68 / P99 5,38 ms, soit un surcoût P
 | Run | Cible | P50 (ms) | P95 (ms) | P99 (ms) | Erreurs | dropped_iterations | Fichier |
 |---|---|---|---|---|---|---|---|
 | 1 | direct | 0,77 | 2,10 | 4,61 | 0 % | 0 | `direct-latency-1.log` |
-| 2 | direct | 0,80 | 2,16 | 5,22 | 0 % | 0 | `direct-latency-2.log` |
+| 2 | direct | 0,75 | 2,20 | 5,18 | 0 % | 0 | `direct-latency-2.log` |
 | 3 | direct | 0,75 | 2,10 | 4,16 | 0 % | 0 | `direct-latency-3.log` |
 | échauffement | kong (30 s) | 1,30 | 3,39 | 6,81 | 0 % | 0 | jeté |
 | 1 | kong | 1,55 | 3,55 | 5,65 | 0 % | 0 | `kong-latency-1.log` |
@@ -131,6 +131,16 @@ Lecture : Kong sert **3 000 req/s sans erreur sur 1 vCPU**, mais il est **proche
 Itérations perdues : 54 sur 265 734 (0,02 %). Pic conteneur : ~120 % CPU (limite à vérifier, cf. ci-dessous), ~206 Mo RAM / 512.
 
 Lecture : 0 erreur et ≈ 100 % servi à tous les paliers → **Kong soutient 3 000 req/s** (P95 25,7 ms). Les queues anormales aux paliers **bas** (750 : P95 300 ms) ne suivent pas la charge : pic transitoire côté hôte (577 VU occupés simultanément = blocage d'environ 0,9 s de toutes les requêtes en vol). À signaler comme bruit de mesure, pas comme limite de Kong.
+
+**Graphiques**
+
+![Latence](../graphs/01-latence.png)
+
+![Coût JWT](../graphs/02-cout-jwt.png)
+
+![Débit P95 par palier](../graphs/03-debit-p95-paliers.png)
+
+![CPU et RAM](../graphs/04-cpu-ram.png)
 
 **Limites de validité** — Docker sur un poste de dev ≠ production ; k6 partage le CPU de l'hôte ; pas de TLS ; résultats à relire en *relatif* entre solutions, pas en absolu.
 

@@ -10,6 +10,7 @@ POC reproductible comparant **Kong Gateway OSS**, **Apache APISIX**, **Traefik P
 | [docs/03-matrice-decision.md](docs/03-matrice-decision.md) | Pondération, barème, matrice à remplir |
 | [docs/04-note-decision.md](docs/04-note-decision.md) | Note de décision (brouillon à compléter avec les mesures) |
 | [docs/05-journal-tests.md](docs/05-journal-tests.md) | Journal des exécutions |
+| [docs/graphs/](docs/graphs/README.md) | Graphiques générés depuis `results/` (`python3 scripts/graphs.py`) |
 
 ## Prérequis
 
