@@ -2,6 +2,8 @@
 
 Toutes les commandes se lancent depuis la racine du dépôt, dans un terminal bash.
 
+> **Version automatique** : `./scripts/run-all.sh kong` enchaîne tout ce qui suit (E1 → E8, ≈ 25 min, pannes et stats lancées en arrière-plan) et affiche un résumé. Le détail ci-dessous sert à rejouer une étape à la main.
+
 ## 0. Préparation (une fois)
 
 ```bash
