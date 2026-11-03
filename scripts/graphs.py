@@ -316,12 +316,19 @@ def chaos_window(t0, label_start, label_end, run_date="2026-11-02"):
 
 
 def chart_status_timeline(scenario, endpoint_title, ev_start, ev_end, fname, title):
-    gws = present(GATEWAYS, "{g}-" + scenario + ".log")
-    if not gws:
+    # Panneaux : (fichier, gateway pour la couleur, titre). Le run historique "passif seul" est montré en premier.
+    panels = []
+    hist = os.path.join(RES, f"kong-{scenario}-passif.log")
+    if os.path.exists(hist):
+        panels.append((hist, "kong", "Kong OSS 3.9 — health check passif seul (config initiale)"))
+    for g in present(GATEWAYS, "{g}-" + scenario + ".log"):
+        suffix = " — health checks actif + passif" if g == "kong" and panels else ""
+        panels.append((os.path.join(RES, f"{g}-{scenario}.log"), g, LABEL[g] + suffix))
+    if not panels:
         return
-    fig, axes = plt.subplots(len(gws), 1, figsize=(9, 2.6 * len(gws)), sharex=True, squeeze=False)
-    for ax, g in zip(axes[:, 0], gws):
-        b, t0 = timeline(os.path.join(RES, f"{g}-{scenario}.log"))
+    fig, axes = plt.subplots(len(panels), 1, figsize=(9, 2.6 * len(panels)), sharex=True, squeeze=False)
+    for ax, (path, g, ptitle) in zip(axes[:, 0], panels):
+        b, t0 = timeline(path)
         if not b:
             continue
         xs = sorted(b)
@@ -338,7 +345,7 @@ def chart_status_timeline(scenario, endpoint_title, ev_start, ev_end, fname, tit
             ax.axvspan(w[0], w[1] if w[1] else w[0] + 30, color=INK2, alpha=0.10, lw=0, zorder=0)
             ax.annotate("panne injectée", (w[0], ax.get_ylim()[1]), xytext=(3, 3), annotation_clip=False, textcoords="offset points",
                         fontsize=8, color=INK2)
-        ax.set_title(LABEL[g], loc="left", fontsize=11, pad=16)
+        ax.set_title(ptitle, loc="left", fontsize=11, pad=16)
         ax.set_ylabel("Réponses / 5 s")
         ax.grid(axis="x", visible=False)
     axes[0, 0].legend(loc="lower right", bbox_to_anchor=(1, 1.02), ncol=3, fontsize=8)

@@ -21,8 +21,16 @@ upstreams:
       - { target: "catalog-2:3000", weight: 100 }
 
   - name: orders-upstream
+    # Contrôle ACTIF indispensable : un contrôle passif seul exclut la cible après 3 erreurs
+    # mais ne la réintègre JAMAIS (constaté en E5, results/kong-errors-orders-passif.log).
     healthchecks:
+      active:
+        type: http
+        http_path: /health
+        healthy:   { interval: 5, successes: 1 }
+        unhealthy: { interval: 5, http_failures: 2, tcp_failures: 2, timeouts: 2 }
       passive:
+        healthy:   { successes: 5 }
         unhealthy: { http_failures: 3, tcp_failures: 2, timeouts: 2 }
     targets:
       - { target: "orders:3000", weight: 100 }
