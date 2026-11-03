@@ -26,9 +26,9 @@
 | Répartition catalog-1 / catalog-2 | 500 / 500 (round-robin exact) | 500 / 500 (round-robin exact) | | |
 | kill-catalog2 : erreurs (nb, %) | 0 / 2 400 (0 %) | 0 / 2 401 (0 %) | | |
 | kill-catalog2 : réintégration (s) | ≈ 5 (hors rotation ≈ 35 s pour 31 s d'arrêt) | ≈ 5 (c2 hors rotation ≈ 36 s pour ≈ 31 s d'arrêt) | | |
-| slow-orders : code / durée max | | | | |
-| errors-orders : circuit ouvert ? code client | config initiale (passif seul) : 503 après 3 échecs, jamais réintégré (2 × 200, 3 × 500, 2 396 × 503) · **actif + passif : à rejouer** | oui : 503 rapides pendant la panne, **refermé ≈ 10 s après la fin** ; 24 × 500 + 563 × 503 sur 2 400 (24 %) | | |
-| kill-orders : code client | | | | |
+| slow-orders : code / durée max | 503 (timeouts → cible exclue), P95 5 s, 1 requête à 15 s (retries) ; rétabli < 10 s après | | | |
+| errors-orders : circuit ouvert ? code client | **actif + passif** : exclu puis réintégré, retour à 100 % de 200 ≈ 5 s après la panne ; 1 764 × 200, 40 × 500, 597 × 503 (26,5 %) · *passif seul (config initiale) : jamais réintégré* | oui : 503 rapides pendant la panne, **refermé ≈ 10 s après la fin** ; 24 × 500 + 563 × 503 sur 2 400 (24 %) | | |
+| kill-orders : code client | 503 (1 × 502 au moment de l'arrêt) ; rétabli ≈ 5–10 s après le redémarrage | | | |
 
 **Observations Kong — kill-catalog2 (02/11, `results/kong-kill-catalog2.log`, `results/chaos-events.log`)**
 Arrêt de catalog-2 de 13:41:51 à 13:42:22 (31 s) sous 20 req/s pendant 120 s. Résultat : 2 400 réponses **toutes en 200**, P95 7,7 ms, max 159 ms. Répartition : catalog-1 = 1 555, catalog-2 = 845. En régime normal catalog-2 aurait reçu ≈ 1 200 requêtes ; il en manque 355, soit ≈ 35,5 s hors rotation → ≈ 31 s d'arrêt + ≈ 5 s pour être réintégré (intervalle du health check actif). Les requêtes tombées sur catalog-2 au moment de l'arrêt ont été **rejouées sur catalog-1** (retries = 2) : aucun impact visible côté client.
@@ -41,24 +41,18 @@ Résultat : 2 réponses 200, **3 réponses 500**, puis **2 396 réponses 503** g
 Explication : le **health check passif** de l'upstream `orders` (`http_failures: 3`) a marqué l'unique cible « unhealthy » après 3 erreurs → Kong répond 503 (*failure to get a peer from the ring-balancer*). Cela joue le rôle d'un circuit breaker… mais **sans demi-ouverture** : sans health check *actif* sur cet upstream, un passif ne remet jamais une cible en service. La panne réelle a duré 30 s, l'indisponibilité vue par le client a duré **tout le reste du test** (et jusqu'au redémarrage de Kong).
 Conséquence : avec Kong OSS, tout upstream doit avoir un health check **actif** en plus du passif, sinon une rafale d'erreurs courte provoque une coupure durable.
 
-**Observations Kong — errors-orders, health checks actif + passif (rejeu, `results/kong-errors-orders.log`)** — *à compléter après le rejeu.*
-Attendu : exclusion après 3 erreurs (passif), réintégration ≤ 5 s par le contrôle actif. Point d'attention : le contrôle actif sonde `/health`, qui reste à 200 pendant l'injection d'erreurs (le chaos ne touche que `/api/orders`) → Kong devrait **alterner** exclusion / réintégration toutes les ~5 s pendant la panne, puis revenir à 100 % de 200 dès la fin.
+**Observations Kong — health checks actif + passif (rejeu 03/11, `results/kong-{errors,slow,kill}-orders.log`)**
 
-**Observations APISIX — errors-orders (02/11, `results/apisix-errors-orders.log`)**
-50 % d'erreurs 500 injectées de 14:19:25 à 14:19:55. Chronologie par tranches de 10 s (`scripts/timeline.sh`) :
+| Scénario | 200 | 500 | 502 | 503 | Erreurs | Retour à 100 % de 200 |
+|---|---|---|---|---|---|---|
+| errors-orders (50 % de 500, 30 s) | 1 764 | 40 | 0 | 597 | 26,5 % | ≈ 5 s après la fin de panne |
+| slow-orders (7 s > timeout 5 s, 30 s) | 1 832 | 0 | 0 | 527 | 22 % (+1 timeout client) | < 10 s |
+| kill-orders (arrêt 30 s) | 1 733 | 0 | 1 | 666 | 27,8 % | ≈ 5–10 s après redémarrage |
 
-| Tranche (s) | 200 | 500 (backend) | 503 (circuit ouvert) |
-|---|---|---|---|
-| 0–10 (début de panne) | 75 | 6 | 119 |
-| 10–20 | 4 | 5 | 191 |
-| 20–30 | 8 | 9 | 183 |
-| 30–40 (fin de panne) | 126 | 4 | 70 |
-| 40–120 | 1 599 | 0 | 0 |
-
-Le plugin `api-breaker` ouvre le circuit après 3 échecs, laisse passer quelques requêtes de test (les 200/500 isolés pendant la panne = demi-ouverture), puis **se referme moins de 10 s après le retour du backend**. Erreurs vues par le client : 24 % du run, toutes concentrées dans la fenêtre de panne. Comparaison Kong (même scénario) : 99,9 % d'erreurs, **aucune récupération**.
+Lecture : le contrôle **passif** exclut la cible dès les premières erreurs (503 rapides côté client), le contrôle **actif** sonde `/health` toutes les 5 s et la réintègre — d'où les quelques 200/500 isolés pendant la panne (réintégrations brèves, `/health` restant à 200 pendant l'injection), puis un retour complet dès la fin. **Profil quasi identique au circuit breaker d'APISIX** (24,4 % d'erreurs, retour < 5 s). Différences : Kong laisse passer un peu plus de 500 (40 vs 24), et son comportement dépend d'un endpoint `/health` fidèle à l'état réel du service.
 
 ![Circuit breaker](../graphs/06-circuit-breaker.png)
 
 ![Failover](../graphs/07-failover-catalogue.png)
 
-**Décision** — Critère décisif. Failover identique, mais face à un backend en erreur, **APISIX protège le client et se rétablit seul**, alors que **Kong OSS transforme une panne de 30 s en coupure durable** faute de circuit breaker et de health check actif. Réponse à la question du sujet : sans circuit breaker, une erreur backend se propage au client, voire s'amplifie.
+**Décision** — Failover identique. Face à un backend en erreur, lent ou arrêté, **les deux protègent le client et se rétablissent seuls** — à condition, pour Kong OSS, d'activer un health check **actif** sur chaque upstream (le passif seul transforme une panne de 30 s en coupure durable : piège de configuration démontré). Léger avantage APISIX : vrai circuit breaker, indépendant de la fidélité de `/health`, et moins de 500 transmis. Réponse à la question du sujet : sans circuit breaker ni health check actif, une erreur backend se propage au client, voire s'amplifie.

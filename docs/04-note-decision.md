@@ -31,10 +31,11 @@ Sept expériences ont été menées, toutes rejouables (dépôt Git, `results/`,
 | 3 000 req/s sur 1 vCPU (E4) | 0 erreur, P95 36 ms, CPU 97 % | 0 erreur, **P95 1,6 ms, CPU 53 %** |
 | RAM sous charge (E4) | ~205 Mo | **~52 Mo** |
 | Perte d'une instance (E5) | 0 erreur | 0 erreur |
-| Backend à 50 % d'erreurs (E5) | passif seul : aucune récupération (erreur de config) · actif + passif : *rejeu en cours* | 24 % d'erreurs, **retour à la normale < 10 s** |
+| Backend à 50 % d'erreurs (E5) | 26,5 % d'erreurs, retour ≈ 5 s *(avec health check actif ; passif seul : jamais rétabli)* | 24,4 % d'erreurs, retour < 5 s |
+| Backend lent / arrêté (E5) | 503 rapides, rétabli < 10 s | non mesuré |
 | Corrélation (E6) | `X-Request-ID` + latences dans chaque réponse | `X-Request-ID` |
 
-**Le résultat décisif est la résilience** (graphique `06-circuit-breaker.png`). Premier run Kong : son health check passif a retiré le backend après 3 erreurs, puis ne l'a **jamais réintégré**. Ce n'est pas une limite du produit mais **une erreur de configuration de notre part** : un contrôle passif ne réintègre jamais une cible, il faut un contrôle actif pour détecter son rétablissement. La config a été corrigée et le scénario rejoué *(résultat à intégrer)*. APISIX a ouvert son circuit pendant la panne, laissé passer quelques requêtes de test, puis l'a refermé dès le retour du backend.
+**La résilience a révélé un piège, pas un écart de produit** (graphique `06-circuit-breaker.png`). Premier run Kong : son health check passif a retiré le backend après 3 erreurs, puis ne l'a **jamais réintégré** — une panne de 30 s devenue une coupure durable. Cause : **notre configuration**, qui n'avait pas de contrôle actif sur cet upstream ; un contrôle passif ne réintègre jamais une cible. Une fois le contrôle actif ajouté, Kong se comporte presque comme le circuit breaker d'APISIX : 503 rapides pendant la panne, retour à la normale en environ 5 s. APISIX y arrive avec un vrai circuit breaker, qui ne dépend pas de la fidélité d'un endpoint `/health`.
 
 ![Circuit breaker](graphs/06-circuit-breaker.png)
 
@@ -43,20 +44,21 @@ Sept expériences ont été menées, toutes rejouables (dépôt Git, `results/`,
 | | Kong OSS | APISIX |
 |---|---|---|
 | Critères éliminatoires | aucun déclenché | aucun déclenché |
-| Score pondéré (contexte microservices) | 3,30 / 5 | **4,45 / 5** |
-| Score pondéré (« performance d'abord ») | 3,27 / 5 | **4,51 / 5** |
+| Score pondéré (contexte microservices) | 3,70 / 5 | **4,45 / 5** |
+| Score pondéré (« performance d'abord ») | 3,57 / 5 | **4,51 / 5** |
 
-Le détail et les justifications sont dans `03-matrice-decision.md`. Le classement est stable quelle que soit la pondération.
+Le détail et les justifications sont dans `03-matrice-decision.md`. Le classement est stable sur les deux pondérations testées, mais l'écart s'est réduit après correction de la config Kong (3,30 → 3,70) : le choix reste sensible au contexte.
 
 ## Recommandation
 
 **Apache APISIX** pour NordFlux.
 
-Il l'emporte sur les deux critères les plus lourds du contexte microservices :
-- **la résilience**, avec un circuit breaker qui se referme seul ;
-- **la sécurité**, avec une validation JWKS qui suit la rotation des clés Keycloak sans reconfiguration.
+À résilience comparable, trois écarts mesurés le départagent :
+- **la marge sous charge** : à 3 000 req/s sur 1 vCPU, P95 de 1,6 ms et 53 % de CPU, contre 36 ms et 97 % pour Kong ;
+- **la sécurité opérationnelle** : la validation JWKS suit la rotation des clés Keycloak sans reconfiguration ;
+- **la pérennité** : tout ce qui a été utilisé est en Apache 2.0, alors que la lignée OSS de Kong est gelée en 3.9.x.
 
-Il est aussi nettement plus sobre sous charge, et tout ce qui a été utilisé est disponible en Apache 2.0.
+Il offre en plus un vrai circuit breaker, plus robuste qu'un retour basé sur `/health`, et un quota tenu exactement.
 
 **Conditions de mise en œuvre :**
 - réduire les messages d'erreur JWT, qui révèlent la cause du refus à un éventuel attaquant ;
@@ -64,7 +66,7 @@ Il est aussi nettement plus sobre sous charge, et tout ce qui a été utilisé e
 - passer le rate limiting sur Redis dès qu'il y a plus d'une instance de gateway, sinon le quota est multiplié par le nombre d'instances ;
 - en production, déployer avec etcd ou l'Ingress Controller plutôt qu'en mode standalone.
 
-**Quand Kong resterait pertinent.** Kong OSS reste solide sur le routage, le failover et surtout l'observabilité prête à l'emploi : la latence gateway et la latence backend sont visibles dans chaque réponse. Il conviendrait à un contexte où la résilience est portée ailleurs, par exemple un service mesh. Deux réserves s'appliqueraient :
+**Quand Kong resterait pertinent.** Kong OSS reste solide sur le routage, le failover et surtout l'observabilité prête à l'emploi : la latence gateway et la latence backend sont visibles dans chaque réponse. Il conviendrait à une équipe qui privilégie l'observabilité sans outillage et la simplicité de démarrage, avec des volumes modérés. Deux réserves s'appliqueraient :
 - ajouter **systématiquement** un health check actif sur chaque upstream ;
 - tenir compte du gel de la lignée OSS à la 3.9.x : OIDC/JWKS et les quotas avancés sont en édition payante.
 
@@ -82,10 +84,10 @@ Il est aussi nettement plus sobre sous charge, et tout ce qui a été utilisé e
   3. bruit de l'hôte : runs avec requêtes perdues rejoués, médiane de 3 runs ;
   4. un bug du script de latence sur la route protégée, corrigé.
 - **Écart de configuration non neutralisé :** Kong avait davantage de métriques Prometheus actives qu'APISIX. Une partie de l'écart de CPU peut en venir.
-- **Expériences non réalisées :** déploiement à chaud (E8), capture Prometheus (E6, partielle), scénarios backend lent et arrêt complet de orders, haute disponibilité et Kubernetes.
+- **Expériences non réalisées :** déploiement à chaud (E8), capture Prometheus (E6, partielle), scénarios backend lent et arrêt complet de orders pour APISIX, haute disponibilité et Kubernetes.
 
 ## Prochaines étapes
 
 1. Rejouer E3 et E5 sur un cluster Kubernetes de test, avec 2 instances d'APISIX et le rate limiting sur Redis.
 2. Mesurer E8 (changement de route sans interruption) et activer le tracing OpenTelemetry de bout en bout.
-3. Optionnel : rejouer Kong avec un health check actif sur `orders` et des métriques allégées, pour quantifier ce qui relève de la configuration et ce qui relève du produit.
+3. Rejouer le débit de Kong avec des métriques Prometheus allégées, pour savoir quelle part de l'écart de CPU vient de la configuration.

@@ -8,7 +8,7 @@ POIDS_PERF = {"Routage": 12, "Securite": 15, "Perf": 30, "Resilience": 15, "Obse
 
 # Notes justifiées dans docs/03-matrice-decision.md (périmètre mesuré : Kong et APISIX)
 NOTES = {
-    "Kong":   {"Routage": 4, "Securite": 3, "Perf": 3, "Resilience": 2, "Observabilite": 5, "Exploitation": 4, "Couts": 2},
+    "Kong":   {"Routage": 4, "Securite": 3, "Perf": 3, "Resilience": 4, "Observabilite": 5, "Exploitation": 4, "Couts": 2},
     "APISIX": {"Routage": 5, "Securite": 4, "Perf": 5, "Resilience": 5, "Observabilite": 4, "Exploitation": 3, "Couts": 5},
     # Traefik et SCG : configurés dans le dépôt mais non mesurés (périmètre réduit, cf. note de décision)
     "Traefik": dict.fromkeys(CRITERES),

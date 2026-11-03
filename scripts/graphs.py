@@ -291,7 +291,7 @@ def timeline(path, step=5, key=1):
     return dict(buckets), t0
 
 
-def chaos_window(t0, label_start, label_end, run_date="2026-11-02"):
+def chaos_window(t0, label_start, label_end):
     """Repère la fenêtre de panne (chaos-events.log, heure locale) relative au début du run."""
     p = os.path.join(RES, "chaos-events.log")
     if not os.path.exists(p) or t0 is None:
@@ -299,6 +299,7 @@ def chaos_window(t0, label_start, label_end, run_date="2026-11-02"):
     import datetime
     import zoneinfo
     tz = zoneinfo.ZoneInfo("Europe/Paris")
+    run_date = datetime.datetime.fromtimestamp(t0 / 1000, tz).strftime("%Y-%m-%d")  # jour du run (heure locale)
     start = end = None
     for line in read(p).splitlines():
         hh, _, ev = line.partition(" ")
@@ -342,16 +343,18 @@ def chart_status_timeline(scenario, endpoint_title, ev_start, ev_end, fname, tit
                 bottom = [a + v for a, v in zip(bottom, vals)]
         w = chaos_window(t0, ev_start, ev_end)
         if w:
-            ax.axvspan(w[0], w[1] if w[1] else w[0] + 30, color=INK2, alpha=0.10, lw=0, zorder=0)
+            ax.axvspan(w[0], w[1] if w[1] else w[0] + 30, ymin=0.965, ymax=1.0, color=INK2, alpha=0.45, lw=0, zorder=4)
             ax.annotate("panne injectée", (w[0], ax.get_ylim()[1]), xytext=(3, 3), annotation_clip=False, textcoords="offset points",
                         fontsize=8, color=INK2)
         ax.set_title(ptitle, loc="left", fontsize=11, pad=16)
         ax.set_ylabel("Réponses / 5 s")
         ax.grid(axis="x", visible=False)
-    axes[0, 0].legend(loc="lower right", bbox_to_anchor=(1, 1.02), ncol=3, fontsize=8)
+    h, l = axes[0, 0].get_legend_handles_labels()
     axes[-1, 0].set_xlabel("Temps depuis le début du test (s)")
-    fig.suptitle(title, fontweight="bold", y=1.04)
-    fig.text(0.01, -0.02, f"20 req/s sur {endpoint_title} pendant 120 s. Zone grisée = fenêtre de panne (chaos-events.log). "
+    fig.suptitle(title, fontweight="bold", y=1.06)
+    fig.tight_layout()
+    fig.legend(h, l, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=3, fontsize=9)
+    fig.text(0.01, -0.02, f"20 req/s sur {endpoint_title} pendant 120 s. Bande grise en haut = fenêtre de panne (chaos-events.log). "
              f"Source : results/*-{scenario}.log", fontsize=8, color=INK2)
     fig.tight_layout()
     save(fig, fname, title)
@@ -375,7 +378,7 @@ def chart_failover():
                 bottom = [a + v for a, v in zip(bottom, vals)]
         w = chaos_window(t0, "STOP catalog-2", "START catalog-2")
         if w:
-            ax.axvspan(w[0], w[1] if w[1] else w[0] + 31, color=INK2, alpha=0.10, lw=0, zorder=0)
+            ax.axvspan(w[0], w[1] if w[1] else w[0] + 31, ymin=0.965, ymax=1.0, color=INK2, alpha=0.45, lw=0, zorder=4)
             ax.annotate("catalog-2 arrêté", (w[0], ax.get_ylim()[1]), xytext=(3, 3), annotation_clip=False, textcoords="offset points",
                         fontsize=8, color=INK2)
         ax.set_title(LABEL[g], loc="left", fontsize=11, pad=16)
