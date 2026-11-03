@@ -5,3 +5,12 @@
 14:19:55 orders error=0
 14:23:05 STOP catalog-2
 14:23:36 START catalog-2
+10:29:31 orders error=0.5
+10:30:01 orders error=0
+10:30:03 reset
+10:30:33 orders delay=7000
+10:31:03 orders delay=0
+10:31:05 reset
+10:31:35 STOP orders
+10:32:05 START orders
+10:32:08 reset

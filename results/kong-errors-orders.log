@@ -1,0 +1,41 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: /scripts/resilience.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 200 max VUs, 2m30s max duration (incl. graceful stop):
+              * steady: 20.00 iterations/s for 2m0s (maxVUs: 50-200, gracefulStop: 30s)
+
+time="2026-11-03T09:29:16Z" level=warning msg="Request Failed" error="Post \"http://keycloak:8080/realms/lab/protocol/openid-connect/token\": lookup keycloak on 127.0.0.11:53: no such host"
+     data_received..............: 0 B     0 B/s
+     data_sent..................: 0 B     0 B/s
+     http_req_blocked...........: avg=0s med=0s p(95)=0s p(99)=0s max=0s
+     http_req_connecting........: avg=0s med=0s p(95)=0s p(99)=0s max=0s
+     http_req_duration..........: avg=0s med=0s p(95)=0s p(99)=0s max=0s
+     http_req_failed............: 100.00% ✓ 1        ✗ 0
+     http_req_receiving.........: avg=0s med=0s p(95)=0s p(99)=0s max=0s
+     http_req_sending...........: avg=0s med=0s p(95)=0s p(99)=0s max=0s
+     http_req_tls_handshaking...: avg=0s med=0s p(95)=0s p(99)=0s max=0s
+     http_req_waiting...........: avg=0s med=0s p(95)=0s p(99)=0s max=0s
+     http_reqs..................: 1       5.052223/s
+     responses_by_status........: 0       0/s
+     ✓ { instance:catalog-1 }...: 0       0/s
+     ✓ { instance:catalog-2 }...: 0       0/s
+     ✓ { instance:none }........: 0       0/s
+     ✓ { instance:orders-1 }....: 0       0/s
+     ✓ { status:0 }.............: 0       0/s
+     ✓ { status:200 }...........: 0       0/s
+     ✓ { status:429 }...........: 0       0/s
+     ✓ { status:500 }...........: 0       0/s
+     ✓ { status:502 }...........: 0       0/s
+     ✓ { status:503 }...........: 0       0/s
+     ✓ { status:504 }...........: 0       0/s
+Run      [ 100% ] setup()
+steady   [   0% ]
+time="2026-11-03T09:29:19Z" level=error msg="Error: Token Keycloak impossible : 0 null\n\tat getToken (file:///scripts/lib/common.js:26:33(39))\n\tat setup (file:///scripts/resilience.js:28:51(8))\n" hint="script exception"
