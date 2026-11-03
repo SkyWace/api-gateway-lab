@@ -14,3 +14,12 @@
 10:31:35 STOP orders
 10:32:05 START orders
 10:32:08 reset
+10:35:02 orders error=0.5
+10:35:32 orders error=0
+10:36:52 reset
+10:37:22 orders delay=7000
+10:37:52 orders delay=0
+10:39:11 reset
+10:39:41 STOP orders
+10:40:12 START orders
+10:41:33 reset
