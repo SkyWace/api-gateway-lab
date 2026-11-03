@@ -12,6 +12,7 @@ POC reproductible comparant **Kong Gateway OSS**, **Apache APISIX**, **Traefik P
 | [docs/05-journal-tests.md](docs/05-journal-tests.md) | Journal des exécutions |
 | [docs/graphs/](docs/graphs/README.md) | Graphiques générés depuis `results/` (`python3 scripts/graphs.py`) |
 | [docs/presentation/](docs/presentation/Comparatif-API-Gateways.pdf) | Support d’oral (PDF, 13 slides) |
+| [docs/commandes-kong-linux.md](docs/commandes-kong-linux.md) | Toutes les commandes de test Kong E1 → E8 (Linux) |
 
 ## Prérequis
 
