@@ -105,6 +105,7 @@ services:
       catalog-1: { condition: service_healthy }
       catalog-2: { condition: service_healthy }
       orders: { condition: service_healthy }
+      keycloak: { condition: service_healthy }   # Kong n'en a pas besoin, mais les tests (tokens) si
 
   apisix:
     image: apache/apisix:3.11.0-debian

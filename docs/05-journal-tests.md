@@ -52,3 +52,4 @@ Une ligne par exécution, y compris les runs ratés (ils font partie de la déma
 | 02/11 ~14:24 | E5 | apisix | `resilience.js ENDPOINT=catalog` + `chaos.sh kill-catalog2` | `results/apisix-kill-catalog2.log` | 2 401 × 200, 0 erreur ; c1 1 565 / c2 836 | Failover transparent, identique à Kong |
 | 02/11 ~14:08 | E4 | apisix | `latency.js` ×3 + orders | `results/apisix-latency-{1,2,3,orders}.log` | P50 1,51 / P95 2,68 / P99 5,38 ms ; orders P50 2,04 / P95 3,67 ms ; 0 dropped | |
 | 03/11 10:25 | E5 | kong | — | — | — | Diagnostic confirmé : défaut de config (pas de health check actif sur `orders`). Ajout du contrôle actif, run initial renommé `kong-errors-orders-passif.log`, E5 Kong à rejouer |
+| 03/11 10:29 | E5 | kong | rejeu errors/slow/kill-orders (actif + passif) | `results/kong-{errors,slow,kill}-orders.log` | 0 requête (setup échoué) | Keycloak non démarré (`up kong` seul ne le lançait pas) → `depends_on: keycloak` ajouté à Kong, rejeu à refaire |
